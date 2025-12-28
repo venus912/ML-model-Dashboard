@@ -4,7 +4,7 @@
 from abc import ABCMeta, abstractmethod
 from pathlib import Path
 
-from rekcurd_dashboard.models import DataServerModel
+from venus912_dashboard.models import DataServerModel
 
 
 def convert_to_valid_path(filepath: str) -> Path:

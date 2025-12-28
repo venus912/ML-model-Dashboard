@@ -76,7 +76,7 @@ class ServiceDeploymentFormImpl extends React.Component<ServiceDeploymentFormPro
               label="Git URL"
               component={FormikInput}
               className="form-control"
-              placeholder="[Option] Git URL of your Rekcurd service. Your code will be downloaded when a container boots IF YOU USE Rekcurd's official docker image (e.g. 'rekcurd/rekcurd:python-latest')." />
+              placeholder="[Option] Git URL of your venus912 service. Your code will be downloaded when a container boots IF YOU USE venus912's official docker image (e.g. 'venus912/venus912:python-latest')." />
             <div className='form-row'>
               <Field
                 name="serviceGitBranch"
@@ -84,7 +84,7 @@ class ServiceDeploymentFormImpl extends React.Component<ServiceDeploymentFormPro
                 component={FormikInput}
                 className="form-control"
                 groupClassName='col-md-6 pr-3'
-                placeholder="[Option] Git Branch name of your Rekcurd service (e.g. 'master')." />
+                placeholder="[Option] Git Branch name of your venus912 service (e.g. 'master')." />
               <Field
                 name="serviceBootScript"
                 label="Booting Shell Script"
@@ -214,7 +214,7 @@ export const ServiceDeploymentDefaultInitialValues = {
   policyMaxSurge: 1,
   policyMaxUnavailable: 0,
   policyWaitSeconds: 300,
-  containerImage: 'rekcurd/rekcurd:python-latest',
+  containerImage: 'venus912/venus912:python-latest',
   serviceGitUrl: '',
   serviceGitBranch: '',
   serviceBootScript: '',

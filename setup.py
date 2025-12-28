@@ -1,4 +1,4 @@
-# Copyright 2018 The Rekcurd Authors.
+# Copyright 2018 The venus912 Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ import subprocess
 
 
 here = os.path.abspath(os.path.dirname(__file__))
-exec(open(os.path.join(here, 'rekcurd_dashboard', '_project.py')).read())
-exec(open(os.path.join(here, 'rekcurd_dashboard', '_version.py')).read())
+exec(open(os.path.join(here, 'venus912_dashboard', '_project.py')).read())
+exec(open(os.path.join(here, 'venus912_dashboard', '_version.py')).read())
 PACKAGE_NAME = __project__  # NOQA
 VERSION = __version__  # NOQA
 DEVELOPMENT_STATUS = "3 - Alpha"
@@ -52,7 +52,7 @@ with open("README.md", "r") as fh:
     LONG_DESCRIPTION = fh.read()
 
 
-class rekcurd_dashboard_sdist(sdist):
+class venus912_dashboard_sdist(sdist):
     def run(self):
         subprocess.check_call('cd frontend && yarn install && yarn run build', shell=True)
         sdist.run(self)
@@ -61,23 +61,23 @@ class rekcurd_dashboard_sdist(sdist):
 setup(
     name=PACKAGE_NAME,
     version=VERSION,
-    description="A WebUI for managing machine learning services of Rekcurd.",
+    description="A WebUI for managing machine learning services of venus912.",
     long_description_content_type='text/markdown',
     author_email="",
-    author="Rekcurd team and contributors",
+    author="venus912 team and contributors",
     license="Apache License Version 2.0",
-    url="https://github.com/rekcurd/dashboard",
-    keywords=["Rekcurd", "Kubernetes", "Python", "gRPC", "Restful"],
+    url="https://github.com/venus912/dashboard",
+    keywords=["venus912", "Kubernetes", "Python", "gRPC", "Restful"],
     install_requires=REQUIRES,
     tests_require=TESTS_REQUIRES,
     extras_require=EXTRAS,
-    packages=['rekcurd_dashboard', 'rekcurd_dashboard.apis',
-              'rekcurd_dashboard.auth', 'rekcurd_dashboard.console_scripts',
-              'rekcurd_dashboard.core', 'rekcurd_dashboard.data_servers',
-              'rekcurd_dashboard.logger', 'rekcurd_dashboard.models',
-              'rekcurd_dashboard.protobuf', 'rekcurd_dashboard.utils'],
+    packages=['venus912_dashboard', 'venus912_dashboard.apis',
+              'venus912_dashboard.auth', 'venus912_dashboard.console_scripts',
+              'venus912_dashboard.core', 'venus912_dashboard.data_servers',
+              'venus912_dashboard.logger', 'venus912_dashboard.models',
+              'venus912_dashboard.protobuf', 'venus912_dashboard.utils'],
     package_data={
-        'rekcurd_dashboard': [
+        'venus912_dashboard': [
             'template/*',
             'static/**/*',
             'static/**/**/*'
@@ -87,11 +87,11 @@ setup(
     long_description=LONG_DESCRIPTION,
     entry_points={
         'console_scripts': [
-            'rekcurd_dashboard=rekcurd_dashboard.console_scripts:main',
+            'venus912_dashboard=venus912_dashboard.console_scripts:main',
         ],
     },
     cmdclass={
-        'sdist': rekcurd_dashboard_sdist
+        'sdist': venus912_dashboard_sdist
     },
     classifiers=[
         "Development Status :: %s" % DEVELOPMENT_STATUS,

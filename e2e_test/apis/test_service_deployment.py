@@ -1,6 +1,6 @@
 from kubernetes import client as k8s_client
 
-from rekcurd_dashboard.models import ServiceModel
+from venus912_dashboard.models import ServiceModel
 
 from e2e_test.base import (
     BaseTestCase, WorkerConfiguration, kube_setting1,
@@ -19,14 +19,14 @@ class TestApiSingleServiceRegistration(BaseTestCase):
         insecure_port = service_model.insecure_port
         application_name = application_model.application_name
         service_level = service_model.service_level
-        rekcurd_grpc_version = service_model.version
+        venus912_grpc_version = service_model.version
         core_v1 = k8s_client.CoreV1Api()
         core_v1.read_namespaced_service(
             name=WorkerConfiguration.service['metadata']['name'],
             namespace=service_level)
         self.wait_worker_ready(
             insecure_host=insecure_host, insecure_port=insecure_port, application_name=application_name,
-            service_level=service_level, rekcurd_grpc_version=rekcurd_grpc_version)
+            service_level=service_level, venus912_grpc_version=venus912_grpc_version)
 
         display_name = "test-service"
         description = ""
@@ -60,7 +60,7 @@ class TestApiServiceDeployment(BaseTestCase):
         service_model_assignment = 1
         resource_request_cpu = container['resources']['requests']['cpu']
         resource_request_memory = container['resources']['requests']['memory']
-        service_git_url = "https://github.com/rekcurd/rekcurd-example.git"
+        service_git_url = "https://github.com/venus912/venus912-example.git"
         service_git_branch = "master"
         service_boot_script = "start.sh"
 
@@ -81,10 +81,10 @@ class TestApiServiceDeployment(BaseTestCase):
         insecure_port = kube_setting1.port
         application_name = application_model.application_name
         service_level = service_model.service_level
-        rekcurd_grpc_version = service_model.version
+        venus912_grpc_version = service_model.version
         self.wait_worker_ready(
             insecure_host=insecure_host, insecure_port=insecure_port, application_name=application_name,
-            service_level=service_level, rekcurd_grpc_version=rekcurd_grpc_version)
+            service_level=service_level, venus912_grpc_version=venus912_grpc_version)
 
 
 class TestApiServiceIdDeployment(BaseTestCase):

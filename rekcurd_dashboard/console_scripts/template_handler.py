@@ -2,7 +2,7 @@
 
 
 import os
-import rekcurd_dashboard
+import venus912_dashboard
 import shutil
 import stat
 
@@ -30,7 +30,7 @@ def template_handler(args: dict):
         destination.mkdir(parents=True, exist_ok=False)
 
     template_suffix = "-tpl"
-    template_dir = Path(rekcurd_dashboard.__path__[0], 'template')
+    template_dir = Path(venus912_dashboard.__path__[0], 'template')
 
     for root, dirs, files in os.walk(template_dir):
         for dirname in dirs[:]:

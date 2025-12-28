@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
 
-from rekcurd_dashboard.core import create_app
+from venus912_dashboard.core import create_app
 
 
 def db_handler(args: dict):
     import sys
     from flask_script import Manager
     from flask_migrate import Migrate, MigrateCommand
-    from rekcurd_dashboard.models import db
+    from venus912_dashboard.models import db
 
     tmp = sys.argv[1:]
     sys.argv = [sys.argv[0]]

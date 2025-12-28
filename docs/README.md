@@ -1,5 +1,5 @@
 # How to use
-After booting Rekcurd dashboard, you can manage your [Rekcurd](https://github.com/rekcurd/rekcurd-python) service using dashboard. If you have a Kubernetes, you can deploy your service to Kubernetes via dashboard.
+After booting venus912 dashboard, you can manage your [venus912](https://github.com/venus912/venus912-python) service using dashboard. If you have a Kubernetes, you can deploy your service to Kubernetes via dashboard.
 
 
 ## Top
@@ -65,13 +65,13 @@ You can register your new ML service by "Add Service" button. If you use Kuberne
 |Basic Info |Display Name* |Display name. |
 | |Description |Description. |
 |Service Configuration |Service Level* |Service level of your service. |
-| |Rekcurd gRPC version* |Rekcurd gRPC version. |
+| |venus912 gRPC version* |venus912 gRPC version. |
 | |Insecure Host* |Address accepted on your service. Default is all ('[::]'). |
 | |Insecure Port* |Port number accepted on your service. Default is '5000'. |
 | |Model Assignment* |Model assignment of this service. |
 |Container Image / Source Code |Container Image* |Image location of Docker registry. |
-| |Git URL |Git URL of your Rekcurd service. Your code will be downloaded when a container boots IF YOU USE Rekcurd's official docker image (e.g. 'rekcurd/rekcurd:python-latest'). |
-| |Git Branch Name |Git Branch name of your Rekcurd service (e.g. 'master'). |
+| |Git URL |Git URL of your venus912 service. Your code will be downloaded when a container boots IF YOU USE venus912's official docker image (e.g. 'venus912/venus912:python-latest'). |
+| |Git Branch Name |Git Branch name of your venus912 service (e.g. 'master'). |
 | |Booting Shell Script |Script file name for booting (e.g. 'start.sh'). |
 |Resource Requirement |CPU Request* |CPU resource which your service need. |
 | |Memory Request* |Memory resource which your service need. |

@@ -8,12 +8,12 @@ from flask_restplus.utils import default_id
 from werkzeug.exceptions import HTTPException
 from kubernetes.client.rest import ApiException
 
-from rekcurd_dashboard.utils import RekcurdDashboardException, ProjectUserRoleException, ApplicationUserRoleException
-from rekcurd_dashboard.auth import auth_required
-from rekcurd_dashboard.models import db
+from venus912_dashboard.utils import venus912DashboardException, ProjectUserRoleException, ApplicationUserRoleException
+from venus912_dashboard.auth import auth_required
+from venus912_dashboard.models import db
 
 
-class RekcurdDashboardApi(Api):
+class venus912DashboardApi(Api):
     def __init__(self, app=None, version='1.0', title=None, description=None,
                  terms_url=None, license=None, license_url=None,
                  contact=None, contact_url=None, contact_email=None,
@@ -42,10 +42,10 @@ class RekcurdDashboardApi(Api):
         self.logger = kwargs.get('logger')
 
 
-api = RekcurdDashboardApi(
+api = venus912DashboardApi(
     version='1.0',
-    title='Rekcurd dashboard API',
-    description='Rekcurd dashboard API',
+    title='venus912 dashboard API',
+    description='venus912 dashboard API',
     doc='/doc/',
     decorators=[auth_required]
 )
@@ -57,7 +57,7 @@ from .common import (
 )
 from .kubernetes_handler import (
     get_full_config_path, save_kubernetes_access_file, remove_kubernetes_access_file,
-    update_kubernetes_deployment_info, apply_rekcurd_to_kubernetes, load_kubernetes_deployment_info,
+    update_kubernetes_deployment_info, apply_venus912_to_kubernetes, load_kubernetes_deployment_info,
     switch_model_assignment, backup_kubernetes_deployment, delete_kubernetes_deployment,
     backup_istio_routing, load_istio_routing, apply_new_route_weight, check_kubernetes_configfile,
     load_secret, apply_secret, delete_secret
@@ -83,10 +83,10 @@ def api_exception_handler(error):
     return {'status': False, 'message': 'Something wrong with accessing Kubernetes'}, 400
 
 
-@api.errorhandler(RekcurdDashboardException)
+@api.errorhandler(venus912DashboardException)
 @api.errorhandler(ProjectUserRoleException)
 @api.errorhandler(ApplicationUserRoleException)
-def rekcurd_exception_handler(error):
+def venus912_exception_handler(error):
     api.logger.error(str(error))
     api.logger.error(traceback.format_exc())
     db.session.rollback()

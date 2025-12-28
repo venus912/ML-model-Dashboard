@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from rekcurd_dashboard.core import create_app
+from venus912_dashboard.core import create_app
 
 
 def server_handler(args: dict):

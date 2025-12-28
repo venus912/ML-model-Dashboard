@@ -4,9 +4,9 @@ from flask_jwt_simple import get_jwt_identity
 from flask_restplus import Namespace, fields, Resource, reqparse, inputs
 
 from . import api, status_model, delete_kubernetes_deployment, delete_secret, GIT_SECRET_PREFIX
-from rekcurd_dashboard.models import db, ProjectModel, ApplicationModel, ApplicationUserRoleModel, ApplicationRole, KubernetesModel, ServiceModel
-from rekcurd_dashboard.utils import RekcurdDashboardException
-from rekcurd_dashboard.apis import DatetimeToTimestamp
+from venus912_dashboard.models import db, ProjectModel, ApplicationModel, ApplicationUserRoleModel, ApplicationRole, KubernetesModel, ServiceModel
+from venus912_dashboard.utils import venus912DashboardException
+from venus912_dashboard.apis import DatetimeToTimestamp
 
 
 application_api_namespace = Namespace('applications', description='Application API Endpoint.')
@@ -19,7 +19,7 @@ application_model_params = application_api_namespace.model('Application', {
     'application_name': fields.String(
         required=True,
         description='Application name.',
-        example='rekcurd-sample'
+        example='venus912-sample'
     ),
     'project_id': fields.Integer(
         required=False,
@@ -60,7 +60,7 @@ class ApiApplications(Resource):
             ApplicationModel.project_id == project_id,
             ApplicationModel.application_name == application_name).one_or_none()
         if application_model is not None:
-            raise RekcurdDashboardException("Application name is duplicated.")
+            raise venus912DashboardException("Application name is duplicated.")
         application_id = uuid.uuid4().hex
         application_model = ApplicationModel(
             project_id=project_id, application_id=application_id,

@@ -1,4 +1,4 @@
-# Rekcurd dashboard frontend
+# venus912 dashboard frontend
 ## Run it!
 ```bash
 $ cd frontend

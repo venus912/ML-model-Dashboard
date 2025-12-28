@@ -7,15 +7,15 @@ import json
 
 from pathlib import Path
 
-from rekcurd_dashboard.protobuf import rekcurd_pb2
+from venus912_dashboard.protobuf import venus912_pb2
 
 
-class RekcurdDashboardConfig:
+class venus912DashboardConfig:
     """
-    Rekcurd dashboard configurations.
+    venus912 dashboard configurations.
     """
     __SERVICE_DEFAULT_PORT: int = 18080
-    REKCURD_GRPC_VERSION: str = rekcurd_pb2.DESCRIPTOR.GetOptions().Extensions[rekcurd_pb2.rekcurd_grpc_proto_version]
+    venus912_GRPC_VERSION: str = venus912_pb2.DESCRIPTOR.GetOptions().Extensions[venus912_pb2.venus912_grpc_proto_version]
 
     __TEST_MODE: bool = None
     KUBERNETES_MODE: str = None
@@ -115,7 +115,7 @@ class RekcurdDashboardConfig:
                 cursor.close()
 
             db_dir = self.__sqlite_default_db_dir()
-            db_path = Path(db_dir, 'rekcurd_dashboard.test.db')
+            db_path = Path(db_dir, 'venus912_dashboard.test.db')
             if not db_path.exists():
                 db_path.parent.mkdir(parents=True, exist_ok=True)
             return f'sqlite:///{db_path}'
@@ -132,7 +132,7 @@ class RekcurdDashboardConfig:
                 cursor.close()
 
             db_dir = self.__sqlite_default_db_dir()
-            db_path = Path(db_dir, 'rekcurd_dashboard.db')
+            db_path = Path(db_dir, 'venus912_dashboard.db')
             if not db_path.exists():
                 db_path.parent.mkdir(parents=True, exist_ok=True)
             return f'sqlite:///{db_path}'
@@ -143,10 +143,10 @@ class RekcurdDashboardConfig:
 
     def __kubeconfig_default_dir(self, dirname: str):
         root = os.path.abspath(
-            os.path.expanduser(os.getenv('REKCURD_DASHBOARD_ROOT', '~/.rekcurd')))
+            os.path.expanduser(os.getenv('venus912_DASHBOARD_ROOT', '~/.venus912')))
         return os.path.join(root, dirname)
 
     def __sqlite_default_db_dir(self):
         root = os.path.abspath(
-            os.path.expanduser(os.getenv('REKCURD_DASHBOARD_ROOT', '~/.rekcurd')))
+            os.path.expanduser(os.getenv('venus912_DASHBOARD_ROOT', '~/.venus912')))
         return os.path.join(root, 'db')

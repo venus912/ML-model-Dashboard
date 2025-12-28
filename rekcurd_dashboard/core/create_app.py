@@ -7,13 +7,13 @@ from flask import Flask, render_template
 from flask_cors import CORS
 from pathlib import Path
 
-from rekcurd_dashboard.utils import RekcurdDashboardConfig
-from rekcurd_dashboard.models import db
-from rekcurd_dashboard.apis import api
-from rekcurd_dashboard.auth import auth
+from venus912_dashboard.utils import venus912DashboardConfig
+from venus912_dashboard.models import db
+from venus912_dashboard.apis import api
+from venus912_dashboard.auth import auth
 
 
-def create_app(config_file: str = None, logger_file: str = None, **options) -> (Flask, RekcurdDashboardConfig):
+def create_app(config_file: str = None, logger_file: str = None, **options) -> (Flask, venus912DashboardConfig):
     """create_app."""
 
     app = Flask(__name__, static_folder='../static', template_folder='../static/dist')
@@ -27,7 +27,7 @@ def create_app(config_file: str = None, logger_file: str = None, **options) -> (
         return render_template('index.html')
 
     # load configurations
-    config = RekcurdDashboardConfig(config_file)
+    config = venus912DashboardConfig(config_file)
     config.set_configurations(**options)
     kubedir = Path(config.DIR_KUBE_CONFIG)
     if not kubedir.exists():
@@ -49,7 +49,7 @@ def create_app(config_file: str = None, logger_file: str = None, **options) -> (
         logger = l.__dict__.get("logger")
         logger.info("Use custom logger.")
     except Exception as e:
-        from rekcurd_dashboard.logger import logger
+        from venus912_dashboard.logger import logger
         logger.info(str(e))
         logger.info("Invalid logger.")
         logger.info("Use default logger.")

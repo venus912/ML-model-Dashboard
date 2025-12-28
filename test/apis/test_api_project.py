@@ -1,4 +1,4 @@
-from rekcurd_dashboard.models import db, ProjectModel
+from venus912_dashboard.models import db, ProjectModel
 
 from functools import wraps
 from unittest.mock import patch, Mock, mock_open
@@ -13,7 +13,7 @@ def mock_decorator():
         @wraps(func)
         def inner_method(*args, **kwargs):
             with patch('builtins.open', new_callable=mock_open) as _, \
-                    patch('rekcurd_dashboard.apis.api_project.update_kubernetes_deployment_info',
+                    patch('venus912_dashboard.apis.api_project.update_kubernetes_deployment_info',
                           new=Mock(return_value=True)) as _:
                 return func(*args, **kwargs)
         return inner_method

@@ -1,4 +1,4 @@
-from rekcurd_dashboard.models import db, DataServerModel, DataServerModeEnum
+from venus912_dashboard.models import db, DataServerModel, DataServerModeEnum
 
 from test.base import BaseTestCase, TEST_PROJECT_ID
 

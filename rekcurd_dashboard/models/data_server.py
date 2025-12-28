@@ -11,13 +11,13 @@ from sqlalchemy.orm import backref
 
 class DataServerModeEnum(enum.Enum):
     """
-    Rekcurd data server options.
+    venus912 data server options.
     """
     LOCAL = 'local'
     CEPH_S3 = 'ceph_s3'
     AWS_S3 = 'aws_s3'
     GCS = 'gcs'
-    PV = 'pv'  # Need to set env as 'local' for Rekcurd worker
+    PV = 'pv'  # Need to set env as 'local' for venus912 worker
 
     @classmethod
     def to_enum(cls, mode: str):

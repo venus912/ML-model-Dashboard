@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
-from rekcurd_dashboard.core import create_app
-from rekcurd_dashboard.models import db, ApplicationUserRoleModel, ApplicationRole, ProjectRole
+from venus912_dashboard.core import create_app
+from venus912_dashboard.models import db, ApplicationUserRoleModel, ApplicationRole, ProjectRole
 
 from test.base import (
     BaseTestCase, create_application_model, create_project_user_role_model,
@@ -23,7 +23,7 @@ class ApiAccessControlTest(BaseTestCase):
             application_id=TEST_APPLICATION_ID, user_id=TEST_USER_ID_1,
             application_role=ApplicationRole.admin, save=True)
 
-    @patch('rekcurd_dashboard.auth.authenticator.EmptyAuthenticator.auth_user')
+    @patch('venus912_dashboard.auth.authenticator.EmptyAuthenticator.auth_user')
     def _get_token(self, uid, mock):
         mock.return_value = {'uid': uid, 'name': 'TEST USER'}
         response = self.client.post('/api/login', content_type='application/json', data='{}')

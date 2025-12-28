@@ -9,13 +9,13 @@ from werkzeug.datastructures import FileStorage
 from . import (
     api, DatetimeToTimestamp, status_model, update_kubernetes_deployment_info,
     save_kubernetes_access_file, remove_kubernetes_access_file, backup_kubernetes_deployment,
-    backup_istio_routing, load_kubernetes_deployment_info, apply_rekcurd_to_kubernetes,
+    backup_istio_routing, load_kubernetes_deployment_info, apply_venus912_to_kubernetes,
     check_kubernetes_configfile
 )
-from rekcurd_dashboard.models import (
+from venus912_dashboard.models import (
     db, KubernetesModel, ProjectUserRoleModel, ProjectRole, ApplicationModel, ServiceModel
 )
-from rekcurd_dashboard.utils import ProjectUserRoleException
+from venus912_dashboard.utils import ProjectUserRoleException
 
 
 kubernetes_api_namespace = Namespace('kubernetes', description='Kubernetes API Endpoint.')
@@ -126,7 +126,7 @@ class ApiKubernetes(Resource):
                             kubernetes_models[0])
                         deployment_info['commit_message'] = "Update at {0:%Y%m%d%H%M%S}".format(
                             datetime.datetime.utcnow())
-                        apply_rekcurd_to_kubernetes(
+                        apply_venus912_to_kubernetes(
                             project_id=project_id, application_id=application_model.application_id,
                             kubernetes_models=[kubernetes_model], is_creation_mode=True, **deployment_info)
             else:

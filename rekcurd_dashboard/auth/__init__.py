@@ -10,9 +10,9 @@ from jwt.exceptions import PyJWTError
 from flask_jwt_simple.exceptions import InvalidHeaderError, NoAuthorizationError
 
 from .ldap import LdapAuthenticator
-from rekcurd_dashboard.utils.exceptions import ProjectUserRoleException, ApplicationUserRoleException
+from venus912_dashboard.utils.exceptions import ProjectUserRoleException, ApplicationUserRoleException
 from .authenticator import EmptyAuthenticator
-from rekcurd_dashboard.models import (
+from venus912_dashboard.models import (
     db, ApplicationModel, UserModel, ProjectUserRoleModel, ProjectRole, ApplicationUserRoleModel, ApplicationRole
 )
 

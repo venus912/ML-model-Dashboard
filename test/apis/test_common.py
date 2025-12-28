@@ -1,6 +1,6 @@
 import unittest
 
-from rekcurd_dashboard.apis.common import *
+from venus912_dashboard.apis.common import *
 
 
 class CommonTest(unittest.TestCase):

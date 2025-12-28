@@ -1,7 +1,7 @@
 import unittest
 
-from rekcurd_dashboard.models import DataServerModel, DataServerModeEnum, ApplicationModel
-from rekcurd_dashboard.data_servers import DataServer, LocalHandler, CephHandler, AwsS3Handler
+from venus912_dashboard.models import DataServerModel, DataServerModeEnum, ApplicationModel
+from venus912_dashboard.data_servers import DataServer, LocalHandler, CephHandler, AwsS3Handler
 
 from . import patch_predictor
 

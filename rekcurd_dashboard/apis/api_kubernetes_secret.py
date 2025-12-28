@@ -5,7 +5,7 @@ from . import (
     status_model, load_secret, apply_secret, delete_secret,
     GIT_SECRET_PREFIX, GIT_ID_RSA, GIT_CONFIG
 )
-from rekcurd_dashboard.utils import RekcurdDashboardException
+from venus912_dashboard.utils import venus912DashboardException
 
 
 kubernetes_secret_api_namespace = Namespace('kubernetes_secret', description='Kubernetes Secret API Endpoint.')
@@ -51,7 +51,7 @@ class ApiGitKey(Resource):
             response_body[GIT_ID_RSA] = string_data[GIT_ID_RSA]
             response_body[GIT_CONFIG] = string_data[GIT_CONFIG]
         else:
-            raise RekcurdDashboardException("No git key secret found.")
+            raise venus912DashboardException("No git key secret found.")
         return response_body
 
     @kubernetes_secret_api_namespace.marshal_with(success_or_not)
@@ -63,11 +63,11 @@ class ApiGitKey(Resource):
         try:
             string_data = load_secret(project_id, application_id, service_level, GIT_SECRET_PREFIX)
         except NotFound:
-            raise RekcurdDashboardException("No Kubernetes is registered")
+            raise venus912DashboardException("No Kubernetes is registered")
         except:
             string_data = dict()
         if GIT_ID_RSA in string_data or GIT_CONFIG in string_data:
-            raise RekcurdDashboardException("Git key secret already exist.")
+            raise venus912DashboardException("Git key secret already exist.")
         string_data[GIT_ID_RSA] = args[GIT_ID_RSA]
         string_data[GIT_CONFIG] = args[GIT_CONFIG]
         apply_secret(project_id, application_id, service_level, string_data, GIT_SECRET_PREFIX)

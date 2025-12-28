@@ -2,9 +2,9 @@ from flask_jwt_simple import get_jwt_identity
 from flask_restplus import Namespace, fields, Resource, reqparse, inputs
 
 from . import api, status_model, update_kubernetes_deployment_info
-from rekcurd_dashboard.utils import RekcurdDashboardException
-from rekcurd_dashboard.models import db, ProjectModel, ProjectUserRoleModel, ProjectRole, KubernetesModel
-from rekcurd_dashboard.apis import DatetimeToTimestamp
+from venus912_dashboard.utils import venus912DashboardException
+from venus912_dashboard.models import db, ProjectModel, ProjectUserRoleModel, ProjectRole, KubernetesModel
+from venus912_dashboard.apis import DatetimeToTimestamp
 
 
 project_api_namespace = Namespace('projects', description='Project API Endpoint.')
@@ -65,7 +65,7 @@ class ApiProjects(Resource):
             db.session.add(project_model)
             db.session.flush()
         else:
-            raise RekcurdDashboardException("Project name is duplicated. \"{}\"".format(display_name))
+            raise venus912DashboardException("Project name is duplicated. \"{}\"".format(display_name))
 
         if api.dashboard_config.IS_ACTIVATE_AUTH:
             user_id = get_jwt_identity()

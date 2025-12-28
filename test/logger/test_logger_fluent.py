@@ -1,6 +1,6 @@
 import unittest
 
-from rekcurd_dashboard.logger import FluentSystemLogger
+from venus912_dashboard.logger import FluentSystemLogger
 
 
 class FluentSystemLoggerTest(unittest.TestCase):

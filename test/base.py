@@ -3,12 +3,12 @@ import warnings
 
 from flask_testing import TestCase
 
-from rekcurd_dashboard.models import (
+from venus912_dashboard.models import (
     db, ApplicationModel, ServiceModel, EvaluationModel, ProjectModel, ModelModel,
     EvaluationResultModel, UserModel, ApplicationUserRoleModel, ApplicationRole,
     ProjectUserRoleModel, ProjectRole, DataServerModel, DataServerModeEnum, KubernetesModel
 )
-from rekcurd_dashboard.core import create_app
+from venus912_dashboard.core import create_app
 
 
 TEST_PROJECT_ID = 1
@@ -108,8 +108,8 @@ def create_application_model(
 
 
 def create_model_model(
-        application_id=TEST_APPLICATION_ID, model_id=TEST_MODEL_ID, file_path="rekcurd-test-model/test.model",
-        description="rekcurd-test-model", save=False) -> ModelModel:
+        application_id=TEST_APPLICATION_ID, model_id=TEST_MODEL_ID, file_path="venus912-test-model/test.model",
+        description="venus912-test-model", save=False) -> ModelModel:
     model_model = ModelModel(
         model_id=model_id, application_id=application_id,
         description=description, filepath=file_path)

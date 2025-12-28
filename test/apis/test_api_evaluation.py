@@ -2,13 +2,13 @@ from unittest.mock import patch, Mock
 import json
 from copy import deepcopy
 
-from rekcurd_dashboard.protobuf import rekcurd_pb2
+from venus912_dashboard.protobuf import venus912_pb2
 from test.base import (
     BaseTestCase, create_service_model, create_eval_model, create_eval_result_model,
     create_data_server_model, TEST_PROJECT_ID, TEST_APPLICATION_ID, TEST_MODEL_ID,
 )
 from io import BytesIO
-from rekcurd_dashboard.models import EvaluationResultModel, EvaluationModel, db
+from venus912_dashboard.models import EvaluationResultModel, EvaluationModel, db
 
 default_metrics = {
     'accuracy': 0.0, 'fvalue': [0.0], 'num': 0, 'option': {}, 'precision': [0.0], 'recall': [0.0], 'label': ['label']
@@ -18,34 +18,34 @@ default_metrics = {
 def patch_stub(func):
     def inner_method(*args, **kwargs):
         mock_stub_obj = Mock()
-        metrics = rekcurd_pb2.EvaluationMetrics(
+        metrics = venus912_pb2.EvaluationMetrics(
             precision=[0.0], recall=[0.0], fvalue=[0.0],
-            label=[rekcurd_pb2.IO(str=rekcurd_pb2.ArrString(val=['label']))])
-        mock_stub_obj.EvaluateModel.return_value = rekcurd_pb2.EvaluateModelResponse(metrics=metrics)
+            label=[venus912_pb2.IO(str=venus912_pb2.ArrString(val=['label']))])
+        mock_stub_obj.EvaluateModel.return_value = venus912_pb2.EvaluateModelResponse(metrics=metrics)
         mock_stub_obj.UploadEvaluationData.return_value = \
-            rekcurd_pb2.UploadEvaluationDataResponse(status=1, message='success')
-        res = rekcurd_pb2.EvaluationResultResponse(
+            venus912_pb2.UploadEvaluationDataResponse(status=1, message='success')
+        res = venus912_pb2.EvaluationResultResponse(
             metrics=metrics,
             detail=[
-                rekcurd_pb2.EvaluationResultResponse.Detail(
-                    input=rekcurd_pb2.IO(str=rekcurd_pb2.ArrString(val=['input'])),
-                    label=rekcurd_pb2.IO(str=rekcurd_pb2.ArrString(val=['test'])),
-                    output=rekcurd_pb2.IO(str=rekcurd_pb2.ArrString(val=['test'])),
+                venus912_pb2.EvaluationResultResponse.Detail(
+                    input=venus912_pb2.IO(str=venus912_pb2.ArrString(val=['input'])),
+                    label=venus912_pb2.IO(str=venus912_pb2.ArrString(val=['test'])),
+                    output=venus912_pb2.IO(str=venus912_pb2.ArrString(val=['test'])),
                     is_correct=True,
                     score=[1.0]
                 ),
-                rekcurd_pb2.EvaluationResultResponse.Detail(
-                    input=rekcurd_pb2.IO(tensor=rekcurd_pb2.Tensor(shape=[1], val=[0.5])),
-                    label=rekcurd_pb2.IO(tensor=rekcurd_pb2.Tensor(shape=[2], val=[0.9, 1.3])),
-                    output=rekcurd_pb2.IO(tensor=rekcurd_pb2.Tensor(shape=[2], val=[0.9, 0.3])),
+                venus912_pb2.EvaluationResultResponse.Detail(
+                    input=venus912_pb2.IO(tensor=venus912_pb2.Tensor(shape=[1], val=[0.5])),
+                    label=venus912_pb2.IO(tensor=venus912_pb2.Tensor(shape=[2], val=[0.9, 1.3])),
+                    output=venus912_pb2.IO(tensor=venus912_pb2.Tensor(shape=[2], val=[0.9, 0.3])),
                     is_correct=False,
                     score=[0.5, 0.5]
                 )
             ])
         mock_stub_obj.EvaluationResult.return_value = iter(res for _ in range(2))
-        with patch('rekcurd_dashboard.core.rekcurd_dashboard_client.rekcurd_pb2_grpc.RekcurdDashboardStub',
+        with patch('venus912_dashboard.core.venus912_dashboard_client.venus912_pb2_grpc.venus912DashboardStub',
                    new=Mock(return_value=mock_stub_obj)), \
-                patch('rekcurd_dashboard.apis.api_evaluation.DataServer',
+                patch('venus912_dashboard.apis.api_evaluation.DataServer',
                       new=Mock(return_value=Mock())) as data_server:
             data_server.return_value.upload_evaluation_data = Mock(return_value='filepath')
 
@@ -68,8 +68,8 @@ class ApiEvaluationTest(BaseTestCase):
         self.assertEqual(response.json[0]['description'], 'eval desc')
 
     @patch_stub
-    @patch('rekcurd_dashboard.apis.api_evaluation.send_file')
-    @patch('rekcurd_dashboard.apis.api_evaluation.os')
+    @patch('venus912_dashboard.apis.api_evaluation.send_file')
+    @patch('venus912_dashboard.apis.api_evaluation.os')
     def test_download(self, os_mock, send_file_mock):
         send_file_mock.return_value = {'status': True}
         create_data_server_model(save=True)
@@ -138,7 +138,7 @@ class ApiEvaluationResultTest(BaseTestCase):
         self.assertEqual(len(response.json), 1)
         self.assertEqual(response.json[0]['evaluation_result_id'], 1)
         self.assertEqual(response.json[0]['evaluation']['description'], 'eval desc')
-        self.assertEqual(response.json[0]['model']['description'], 'rekcurd-test-model')
+        self.assertEqual(response.json[0]['model']['description'], 'venus912-test-model')
 
     @patch_stub
     def test_get(self):
@@ -160,7 +160,7 @@ class ApiEvaluationResultTest(BaseTestCase):
             details[1],
             {'input': 0.5, 'label': [0.9, 1.3], 'output': [0.9, 0.3], 'score': [0.5, 0.5], 'is_correct': False})
 
-    @patch('rekcurd_dashboard.core.rekcurd_dashboard_client.rekcurd_pb2_grpc.RekcurdDashboardStub')
+    @patch('venus912_dashboard.core.venus912_dashboard_client.venus912_pb2_grpc.venus912DashboardStub')
     def test_get_not_found(self, mock_stub_class):
         evaluation_model = create_eval_model(TEST_APPLICATION_ID, save=True)
         eval_result_model = create_eval_result_model(

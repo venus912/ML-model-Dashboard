@@ -3,7 +3,7 @@ from unittest.mock import patch, Mock, mock_open
 
 from werkzeug.datastructures import FileStorage
 
-from rekcurd_dashboard.apis.kubernetes_handler import (
+from venus912_dashboard.apis.kubernetes_handler import (
     get_full_config_path, save_kubernetes_access_file, remove_kubernetes_access_file
 )
 
@@ -18,7 +18,7 @@ def mock_decorator():
         @wraps(func)
         def inner_method(*args, **kwargs):
             with patch('builtins.open', new_callable=mock_open) as _, \
-                    patch('rekcurd_dashboard.apis.kubernetes_handler.Path.unlink',
+                    patch('venus912_dashboard.apis.kubernetes_handler.Path.unlink',
                           new=Mock(return_value=None)) as _:
                 return func(*args, **kwargs)
         return inner_method

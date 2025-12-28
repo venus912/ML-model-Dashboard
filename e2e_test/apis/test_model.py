@@ -14,7 +14,7 @@ class TestApiModels(BaseTestCase):
                                insecure_port=service_model.insecure_port,
                                application_name=application_model.application_name,
                                service_level=service_model.service_level,
-                               rekcurd_grpc_version=service_model.version)
+                               venus912_grpc_version=service_model.version)
 
         with open(POSITIVE_MODEL_PATH, 'rb') as f:
             response = self.client.post(
@@ -32,7 +32,7 @@ class TestApiModels(BaseTestCase):
             if pod.metadata.name.startswith("deploy-test20190307093000"):
                 name = pod.metadata.name
                 break
-        model_pod_path = f'/usr/local/src/rekcurd/python/sklearn-digits/model/{model_name}'
+        model_pod_path = f'/usr/local/src/venus912/python/sklearn-digits/model/{model_name}'
         exec_command = [
             '/bin/sh',
             '-c',

@@ -1,8 +1,8 @@
 from flask_restplus import Namespace, fields, Resource, reqparse
 
 from . import status_model, load_istio_routing, apply_new_route_weight
-from rekcurd_dashboard.models import db, KubernetesModel, ApplicationModel, ServiceModel
-from rekcurd_dashboard.utils import RekcurdDashboardException
+from venus912_dashboard.models import db, KubernetesModel, ApplicationModel, ServiceModel
+from venus912_dashboard.utils import venus912DashboardException
 
 
 service_routing_api_namespace = Namespace('service_routings', description='Service Routing API Endpoint.')
@@ -92,7 +92,7 @@ class ApiServiceRouting(Resource):
             ServiceModel.application_id == application_id,
             ServiceModel.service_level == service_level).all()
         if not service_models:
-            raise RekcurdDashboardException("No services available.")
+            raise venus912DashboardException("No services available.")
 
         service_id_name = dict()
         for service_model in service_models:

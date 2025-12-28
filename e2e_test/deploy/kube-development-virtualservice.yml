@@ -2,7 +2,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   labels:
-    rekcurd-worker: "true"
+    venus912-worker: "true"
     id: id-test20190307093000
     name: app-test20190307093000
     sel: test20190307093000
@@ -12,15 +12,15 @@ spec:
   hosts:
   - "*"
   gateways:
-  - rekcurd-ingress-gateway
+  - venus912-ingress-gateway
   http:
   - match:
     - headers:
-        x-rekcurd-application-name:
+        x-venus912-application-name:
           exact: app-test20190307093000
-        x-rekcurd-sevice-level:
+        x-venus912-sevice-level:
           exact: development
-        x-rekcurd-grpc-version:
+        x-venus912-grpc-version:
           exact: v2
     route:
     - destination:

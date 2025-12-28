@@ -1,1 +1,1 @@
-__project__ = 'rekcurd_dashboard'
+__project__ = 'venus912_dashboard'

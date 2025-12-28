@@ -1,8 +1,8 @@
 from flask_jwt_simple import get_jwt_identity
 from flask_restplus import Resource, Namespace, fields, reqparse
 
-from rekcurd_dashboard.models import db, UserModel, ApplicationRole, ProjectUserRoleModel, ApplicationUserRoleModel
-from rekcurd_dashboard.utils import RekcurdDashboardException
+from venus912_dashboard.models import db, UserModel, ApplicationRole, ProjectUserRoleModel, ApplicationUserRoleModel
+from venus912_dashboard.utils import venus912DashboardException
 from . import status_model
 
 
@@ -48,7 +48,7 @@ class ApiProjectIdACL(Resource):
         uid = args['uid']
         user_model = db.session.query(UserModel).filter(UserModel.auth_id == uid).one_or_none()
         if user_model is None:
-            raise RekcurdDashboardException("No user found.")
+            raise venus912DashboardException("No user found.")
 
         role = args['role']
         project_user_role_model = db.session.query(ProjectUserRoleModel).filter(
@@ -64,7 +64,7 @@ class ApiProjectIdACL(Resource):
             db.session.close()
             return {"status": True, "message": "Success."}, 200
         else:
-            raise RekcurdDashboardException("Already assigned.")
+            raise venus912DashboardException("Already assigned.")
 
     @admin_api_namespace.marshal_with(success_or_not)
     @admin_api_namespace.expect(save_acl_parser)
@@ -73,7 +73,7 @@ class ApiProjectIdACL(Resource):
         uid = args['uid']
         user_model = db.session.query(UserModel).filter(UserModel.auth_id == uid).one_or_none()
         if user_model is None:
-            raise RekcurdDashboardException("No user found.")
+            raise venus912DashboardException("No user found.")
         project_user_role_model = db.session.query(ProjectUserRoleModel).filter(
             ProjectUserRoleModel.project_id == project_id,
             ProjectUserRoleModel.user_id == user_model.user_id).first_or_404()
@@ -89,7 +89,7 @@ class ApiProjectIdUserIdACL(Resource):
     def delete(self, project_id, uid):
         user_model = db.session.query(UserModel).filter(UserModel.auth_id == uid).one_or_none()
         if user_model is None:
-            raise RekcurdDashboardException("No user found.")
+            raise venus912DashboardException("No user found.")
 
         ProjectUserRoleModel.query.filter(
             ProjectUserRoleModel.project_id == project_id,
@@ -118,7 +118,7 @@ class ApiApplicationIdACL(Resource):
         uid = args['uid']
         user_model = db.session.query(UserModel).filter(UserModel.auth_id == uid).one_or_none()
         if user_model is None:
-            raise RekcurdDashboardException("No user found.")
+            raise venus912DashboardException("No user found.")
 
         role = args['role']
         # if role is added by first user, they will be owner
@@ -148,7 +148,7 @@ class ApiApplicationIdACL(Resource):
             db.session.close()
             return {"status": True, "message": "Success."}, 200
         else:
-            raise RekcurdDashboardException("Already assigned.")
+            raise venus912DashboardException("Already assigned.")
 
     @admin_api_namespace.marshal_with(success_or_not)
     @admin_api_namespace.expect(save_acl_parser)
@@ -157,7 +157,7 @@ class ApiApplicationIdACL(Resource):
         uid = args['uid']
         user_model = db.session.query(UserModel).filter(UserModel.auth_id == uid).one_or_none()
         if user_model is None:
-            raise RekcurdDashboardException("No user found.")
+            raise venus912DashboardException("No user found.")
         application_user_role_model: ApplicationUserRoleModel = db.session.query(ApplicationUserRoleModel).filter(
             ApplicationUserRoleModel.application_id == application_id,
             ApplicationUserRoleModel.user_id == user_model.user_id).first_or_404()
@@ -173,7 +173,7 @@ class ApiApplicationIdUserIdACL(Resource):
     def delete(self, project_id, application_id, uid):
         user_model = db.session.query(UserModel).filter(UserModel.auth_id == uid).one_or_none()
         if user_model is None:
-            raise RekcurdDashboardException("No user found.")
+            raise venus912DashboardException("No user found.")
 
         ApplicationUserRoleModel.query.filter(
             ApplicationUserRoleModel.application_id == application_id,

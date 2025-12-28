@@ -1,4 +1,4 @@
-from rekcurd_dashboard.apis import GIT_ID_RSA, GIT_CONFIG
+from venus912_dashboard.apis import GIT_ID_RSA, GIT_CONFIG
 
 from e2e_test.base import (
     BaseTestCase, TEST_PROJECT_ID, TEST_APPLICATION_ID

@@ -60,12 +60,12 @@ class ServiceConfigFormImpl extends React.Component<ServiceConfigFormProps> {
     return (
       <Field
         name="version"
-        label="Rekcurd gRPC version"
+        label="venus912 gRPC version"
         component={FormikInput}
         type="select"
         className='form-control'
         groupClassName='col-md-6'
-        placeholder="Rekcurd gRPC version."
+        placeholder="venus912 gRPC version."
         options={versions}
         onChange={()=>{}}
         required />

@@ -4,7 +4,7 @@
 import boto
 import boto.s3.connection
 
-from rekcurd_dashboard.models import DataServerModel
+from venus912_dashboard.models import DataServerModel
 from .data_handler import DataHandler
 
 

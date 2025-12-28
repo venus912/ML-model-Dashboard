@@ -2,7 +2,7 @@ apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
   labels:
-    rekcurd-worker: "true"
+    venus912-worker: "true"
     id: id-test20190307093000
     name: app-test20190307093000
     sel: test20190307093000

@@ -8,10 +8,10 @@ import numpy as np
 
 from werkzeug.datastructures import FileStorage
 
-from rekcurd_dashboard.core import RekcurdDashboardClient
-from rekcurd_client import RekcurdWorkerClient
-from rekcurd_dashboard.logger import JsonSystemLogger
-from rekcurd_dashboard.apis.kubernetes_handler import get_full_config_path
+from venus912_dashboard.core import venus912DashboardClient
+from venus912_client import venus912WorkerClient
+from venus912_dashboard.logger import JsonSystemLogger
+from venus912_dashboard.apis.kubernetes_handler import get_full_config_path
 
 from e2e_test.base import (
     BaseTestCase, WorkerConfiguration, create_kubernetes_model,
@@ -31,7 +31,7 @@ class TestApiServiceId(BaseTestCase):
         insecure_port = service_model.insecure_port
         application_name = application_model.application_name
         service_level = service_model.service_level
-        rekcurd_grpc_version = service_model.version
+        venus912_grpc_version = service_model.version
         positive_model = create_model_model(model_id=TEST_MODEL_ID1, positive_model=True)
         negative_model = create_model_model(model_id=TEST_MODEL_ID2, positive_model=False)
         core_v1 = k8s_client.CoreV1Api()
@@ -40,22 +40,22 @@ class TestApiServiceId(BaseTestCase):
             namespace=service_level)
         self.wait_worker_ready(
             insecure_host=insecure_host, insecure_port=insecure_port, application_name=application_name,
-            service_level=service_level, rekcurd_grpc_version=rekcurd_grpc_version)
+            service_level=service_level, venus912_grpc_version=venus912_grpc_version)
 
         # Upload models
-        logger = JsonSystemLogger('Rekcurd dashboard test', log_level=logging.CRITICAL)
-        dashboard_client = RekcurdDashboardClient(
+        logger = JsonSystemLogger('venus912 dashboard test', log_level=logging.CRITICAL)
+        dashboard_client = venus912DashboardClient(
             host=insecure_host, port=insecure_port, application_name=application_name,
-            service_level=service_level, rekcurd_grpc_version=rekcurd_grpc_version)
+            service_level=service_level, venus912_grpc_version=venus912_grpc_version)
         dashboard_client.logger = logger
         dashboard_client.run_upload_model(model_path=positive_model.filepath,
                                           f=FileStorage(open(POSITIVE_MODEL_PATH, 'rb')))
         dashboard_client.run_upload_model(model_path=negative_model.filepath,
                                           f=FileStorage(open(NEGATIVE_MODEL_PATH, 'rb')))
 
-        worker_client = RekcurdWorkerClient(
+        worker_client = venus912WorkerClient(
             host=insecure_host, port=insecure_port, application_name=application_name,
-            service_level=service_level, rekcurd_grpc_version=rekcurd_grpc_version)
+            service_level=service_level, venus912_grpc_version=venus912_grpc_version)
         # Switch to the negative model
         response = self.client.put(self.__URL, data={'model_id': TEST_MODEL_ID2})
         self.assertEqual(200, response.status_code)
@@ -91,7 +91,7 @@ class TestApiServiceId(BaseTestCase):
                                insecure_port=service_model.insecure_port,
                                application_name=application_model.application_name,
                                service_level=service_model.service_level,
-                               rekcurd_grpc_version=service_model.version)
+                               venus912_grpc_version=service_model.version)
 
         try:
             apps_v1_api.read_namespaced_deployment(

@@ -1,8 +1,8 @@
 from functools import wraps
 from unittest.mock import patch, Mock, mock_open
 
-from rekcurd_dashboard.apis import RekcurdDashboardException
-from rekcurd_dashboard.models import db, ServiceModel, DataServerModel, DataServerModeEnum
+from venus912_dashboard.apis import venus912DashboardException
+from venus912_dashboard.models import db, ServiceModel, DataServerModel, DataServerModeEnum
 
 from test.base import (
     BaseTestCase, TEST_PROJECT_ID, TEST_APPLICATION_ID, TEST_SERVICE_ID, TEST_MODEL_ID,
@@ -18,14 +18,14 @@ def mock_decorator():
         @wraps(func)
         def inner_method(*args, **kwargs):
             with patch('builtins.open', new_callable=mock_open) as _, \
-                    patch('rekcurd_dashboard.apis.api_service.switch_model_assignment',
+                    patch('venus912_dashboard.apis.api_service.switch_model_assignment',
                           new=Mock(return_value={"status": True, "message": "Success."})) as _, \
-                    patch('rekcurd_dashboard.apis.api_service.delete_kubernetes_deployment',
+                    patch('venus912_dashboard.apis.api_service.delete_kubernetes_deployment',
                           new=Mock(return_value=True)) as _, \
-                    patch('rekcurd_dashboard.apis.api_service.RekcurdDashboardClient',
-                          new=Mock(return_value=Mock())) as rekcurd_dashboard_application:
-                rekcurd_dashboard_application.return_value.run_switch_service_model_assignment = Mock()
-                rekcurd_dashboard_application.return_value.run_switch_service_model_assignment.return_value = \
+                    patch('venus912_dashboard.apis.api_service.venus912DashboardClient',
+                          new=Mock(return_value=Mock())) as venus912_dashboard_application:
+                venus912_dashboard_application.return_value.run_switch_service_model_assignment = Mock()
+                venus912_dashboard_application.return_value.run_switch_service_model_assignment.return_value = \
                     {"status": True, "message": "Success."}
                 return func(*args, **kwargs)
         return inner_method
@@ -53,7 +53,7 @@ class ApiServiceIdTest(BaseTestCase):
     def test_put(self):
         model_id = 2
         create_data_server_model(save=True)
-        create_model_model(model_id=model_id, file_path="rekcurd-test-model/new.model", description="new", save=True)
+        create_model_model(model_id=model_id, file_path="venus912-test-model/new.model", description="new", save=True)
 
         response = self.client.put(self.__URL, data={'model_id': TEST_MODEL_ID})
         self.assertEqual(400, response.status_code)

@@ -23,7 +23,7 @@ services:
     container_name: dashboard-backend-dev-for-aws
     build:
       context: ../..
-      dockerfile: ./rekcurd_dashboard/Dockerfile
+      dockerfile: ./venus912_dashboard/Dockerfile
     volumes:
       - ../../:/root/dashboard
       - ~/.aws:/root/.aws
@@ -33,6 +33,6 @@ services:
     command:
       - /bin/bash
       - -c
-      - "pip install -r requirements.txt && pip install -e . && cd rekcurd_dashboard && (rekcurd_dashboard db init --settings settings.yml || true) && (rekcurd_dashboard db migrate --settings settings.yml || true) && rekcurd_dashboard server --settings settings.yml"
+      - "pip install -r requirements.txt && pip install -e . && cd venus912_dashboard && (venus912_dashboard db init --settings settings.yml || true) && (venus912_dashboard db migrate --settings settings.yml || true) && venus912_dashboard server --settings settings.yml"
     ports:
       - "18080:18080"

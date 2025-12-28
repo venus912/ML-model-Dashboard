@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    rekcurd-worker: "true"
+    venus912-worker: "true"
     id: id-test20190307093000
     name: app-test20190307093000
     sel: test20190307093000
@@ -24,7 +24,7 @@ spec:
   template:
     metadata:
       labels:
-        rekcurd-worker: "true"
+        venus912-worker: "true"
         id: id-test20190307093000
         name: app-test20190307093000
         sel: test20190307093000
@@ -43,35 +43,35 @@ spec:
             weight: 100
       containers:
       - env:
-        - name: REKCURD_SERVICE_UPDATE_FLAG
+        - name: venus912_SERVICE_UPDATE_FLAG
           value: Edit here to run rolling update
-        - name: REKCURD_KUBERNETES_MODE
+        - name: venus912_KUBERNETES_MODE
           value: "true"
-        - name: REKCURD_DEBUG_MODE
+        - name: venus912_DEBUG_MODE
           value: "true"
-        - name: REKCURD_APPLICATION_NAME
+        - name: venus912_APPLICATION_NAME
           value: app-test20190307093000
-        - name: REKCURD_SERVICE_INSECURE_HOST
+        - name: venus912_SERVICE_INSECURE_HOST
           value: "[::]"
-        - name: REKCURD_SERVICE_INSECURE_PORT
+        - name: venus912_SERVICE_INSECURE_PORT
           value: "5000"
-        - name: REKCURD_SERVICE_ID
+        - name: venus912_SERVICE_ID
           value: test20190307093000
-        - name: REKCURD_SERVICE_LEVEL
+        - name: venus912_SERVICE_LEVEL
           value: development
-        - name: REKCURD_GRPC_PROTO_VERSION
+        - name: venus912_GRPC_PROTO_VERSION
           value: v2
-        - name: REKCURD_MODEL_MODE
+        - name: venus912_MODEL_MODE
           value: local
-        - name: REKCURD_MODEL_FILE_PATH
+        - name: venus912_MODEL_FILE_PATH
           value: positive.pkl
-        - name: REKCURD_SERVICE_GIT_URL
-          value: https://github.com/rekcurd/rekcurd-example.git
-        - name: REKCURD_SERVICE_GIT_BRANCH
+        - name: venus912_SERVICE_GIT_URL
+          value: https://github.com/venus912/venus912-example.git
+        - name: venus912_SERVICE_GIT_BRANCH
           value: master
-        - name: REKCURD_SERVICE_BOOT_SHELL
+        - name: venus912_SERVICE_BOOT_SHELL
           value: start.sh
-        image: rekcurd/rekcurd:python-latest
+        image: venus912/venus912:python-latest
         imagePullPolicy: Always
         name: test20190307093000
         ports:

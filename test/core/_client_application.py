@@ -2,8 +2,8 @@ import collections
 import enum
 import grpc
 
-from rekcurd_dashboard.protobuf import rekcurd_pb2_grpc, rekcurd_pb2
-from rekcurd_dashboard.core import RekcurdDashboardClient
+from venus912_dashboard.protobuf import venus912_pb2_grpc, venus912_pb2
+from venus912_dashboard.core import venus912DashboardClient
 
 
 @enum.unique
@@ -46,20 +46,20 @@ class Request(enum.Enum):
 
 @enum.unique
 class Response(enum.Enum):
-    SERVICE_INFO_RESPONSE = rekcurd_pb2.ServiceInfoResponse(
+    SERVICE_INFO_RESPONSE = venus912_pb2.ServiceInfoResponse(
         application_name="sample", service_name="service", service_level="development")
-    MODEL_RESPONSE = rekcurd_pb2.ModelResponse(status=1, message="Success.")
-    UPLOAD_EVALUATION_DATA_RESPONSE = rekcurd_pb2.UploadEvaluationDataResponse(status=1, message="Success.")
-    METRICS = rekcurd_pb2.EvaluationMetrics(
+    MODEL_RESPONSE = venus912_pb2.ModelResponse(status=1, message="Success.")
+    UPLOAD_EVALUATION_DATA_RESPONSE = venus912_pb2.UploadEvaluationDataResponse(status=1, message="Success.")
+    METRICS = venus912_pb2.EvaluationMetrics(
         num=1, accuracy=1.0, precision=[1.0], recall=[1.0], fvalue=[1.0], option=dict(),
-        label=[rekcurd_pb2.IO(str=rekcurd_pb2.ArrString(val=["label"]))])
-    EVALUATE_MODEL_RESPONSE = rekcurd_pb2.EvaluateModelResponse(metrics=METRICS)
-    EVALUATION_RESULT_RESPONSE = rekcurd_pb2.EvaluationResultResponse(
+        label=[venus912_pb2.IO(str=venus912_pb2.ArrString(val=["label"]))])
+    EVALUATE_MODEL_RESPONSE = venus912_pb2.EvaluateModelResponse(metrics=METRICS)
+    EVALUATION_RESULT_RESPONSE = venus912_pb2.EvaluationResultResponse(
         metrics=METRICS,
-        detail=[rekcurd_pb2.EvaluationResultResponse.Detail(
-            input=rekcurd_pb2.IO(str=rekcurd_pb2.ArrString(val=["input"])),
-            label=rekcurd_pb2.IO(str=rekcurd_pb2.ArrString(val=["label"])),
-            output=rekcurd_pb2.IO(str=rekcurd_pb2.ArrString(val=["output"])),
+        detail=[venus912_pb2.EvaluationResultResponse.Detail(
+            input=venus912_pb2.IO(str=venus912_pb2.ArrString(val=["input"])),
+            label=venus912_pb2.IO(str=venus912_pb2.ArrString(val=["label"])),
+            output=venus912_pb2.IO(str=venus912_pb2.ArrString(val=["output"])),
             score=[1.0],
             is_correct=True)])
 
@@ -88,7 +88,7 @@ def _assertEvaluationResultResponse(response_iterator):
         return False
 
 
-def _run_service_info(client: RekcurdDashboardClient):
+def _run_service_info(client: venus912DashboardClient):
     response = client.run_service_info()
     if _assertServiceInfoResponse(response):
         return _SATISFACTORY_OUTCOME
@@ -96,7 +96,7 @@ def _run_service_info(client: RekcurdDashboardClient):
         return _UNSATISFACTORY_OUTCOME
 
 
-def _run_upload_model(client: RekcurdDashboardClient):
+def _run_upload_model(client: venus912DashboardClient):
     response, call = client.stub.UploadModel.with_call(
         iter((Request.UPLOAD_MODEL_REQUEST.value,) * 3))
     if Response.MODEL_RESPONSE.value == response and call.code() is grpc.StatusCode.OK:
@@ -105,7 +105,7 @@ def _run_upload_model(client: RekcurdDashboardClient):
         return _UNSATISFACTORY_OUTCOME
 
 
-def _run_switch_service_model_assignment(client: RekcurdDashboardClient):
+def _run_switch_service_model_assignment(client: venus912DashboardClient):
     response = client.run_switch_service_model_assignment(*Request.SWITCH_MODEL_REQUEST.value)
     if _assertModelResponse(response):
         return _SATISFACTORY_OUTCOME
@@ -113,7 +113,7 @@ def _run_switch_service_model_assignment(client: RekcurdDashboardClient):
         return _UNSATISFACTORY_OUTCOME
 
 
-def _run_upload_evaluation_data(client: RekcurdDashboardClient):
+def _run_upload_evaluation_data(client: venus912DashboardClient):
     response, call = client.stub.UploadEvaluationData.with_call(
         iter((Request.UPLOAD_EVALUATION_DATA_REQUEST.value,) * 3))
     if Response.UPLOAD_EVALUATION_DATA_RESPONSE.value == response and call.code() is grpc.StatusCode.OK:
@@ -122,7 +122,7 @@ def _run_upload_evaluation_data(client: RekcurdDashboardClient):
         return _UNSATISFACTORY_OUTCOME
 
 
-def _run_evaluate_model(client: RekcurdDashboardClient):
+def _run_evaluate_model(client: venus912DashboardClient):
     response, call = client.stub.EvaluateModel.with_call(
         iter((Request.EVALUATE_MODEL_REQUEST.value,) * 3))
     if Response.EVALUATE_MODEL_RESPONSE.value == response and call.code() is grpc.StatusCode.OK:
@@ -131,7 +131,7 @@ def _run_evaluate_model(client: RekcurdDashboardClient):
         return _UNSATISFACTORY_OUTCOME
 
 
-def _run_evaluation_data(client: RekcurdDashboardClient):
+def _run_evaluation_data(client: venus912DashboardClient):
     response_iterator = client.run_evaluation_data(*Request.EVALUATION_RESULT_REQUEST.value)
     if _assertEvaluationResultResponse(response_iterator):
         return _SATISFACTORY_OUTCOME
@@ -150,10 +150,10 @@ _IMPLEMENTATIONS = {
 
 
 def run(scenario, channel):
-    stub = rekcurd_pb2_grpc.RekcurdDashboardStub(channel)
-    client = RekcurdDashboardClient(
-        host="example.com", port=80, application_name="rekcurd-sample",
-        service_level="development", rekcurd_grpc_version='v2')
+    stub = venus912_pb2_grpc.venus912DashboardStub(channel)
+    client = venus912DashboardClient(
+        host="example.com", port=80, application_name="venus912-sample",
+        service_level="development", venus912_grpc_version='v2')
     client.stub = stub
     try:
         return _IMPLEMENTATIONS[scenario](client)

@@ -1,7 +1,7 @@
 from functools import wraps
 from unittest.mock import patch, Mock, mock_open
 
-from rekcurd_dashboard.models import db, ModelModel, DataServerModel, DataServerModeEnum, ServiceModel
+from venus912_dashboard.models import db, ModelModel, DataServerModel, DataServerModeEnum, ServiceModel
 
 from test.base import BaseTestCase, TEST_PROJECT_ID, TEST_APPLICATION_ID, TEST_MODEL_ID, create_data_server_model
 
@@ -14,14 +14,14 @@ def mock_decorator():
         @wraps(func)
         def inner_method(*args, **kwargs):
             with patch('builtins.open', new_callable=mock_open) as _, \
-                    patch('rekcurd_dashboard.apis.api_model.DataServer',
+                    patch('venus912_dashboard.apis.api_model.DataServer',
                           new=Mock(return_value=Mock())) as data_server, \
-                    patch('rekcurd_dashboard.apis.api_model.RekcurdDashboardClient',
-                          new=Mock(return_value=Mock())) as rekcurd_dashboard_application:
+                    patch('venus912_dashboard.apis.api_model.venus912DashboardClient',
+                          new=Mock(return_value=Mock())) as venus912_dashboard_application:
                 data_server.return_value.upload_model = Mock()
                 data_server.return_value.upload_model.return_value = "filepath"
-                rekcurd_dashboard_application.return_value.run_upload_model = Mock()
-                rekcurd_dashboard_application.return_value.run_upload_model.return_value = \
+                venus912_dashboard_application.return_value.run_upload_model = Mock()
+                venus912_dashboard_application.return_value.run_upload_model.return_value = \
                     {"status": True, "message": "Success."}
                 return func(*args, **kwargs)
         return inner_method

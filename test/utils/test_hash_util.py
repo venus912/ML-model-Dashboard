@@ -2,7 +2,7 @@ import unittest
 
 from werkzeug.datastructures import FileStorage
 
-from rekcurd_dashboard.utils import HashUtil
+from venus912_dashboard.utils import HashUtil
 
 
 class HashUtilTest(unittest.TestCase):

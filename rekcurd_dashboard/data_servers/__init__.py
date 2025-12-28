@@ -3,7 +3,7 @@
 
 import datetime
 
-from rekcurd_dashboard.models import ApplicationModel, DataServerModel, DataServerModeEnum
+from venus912_dashboard.models import ApplicationModel, DataServerModel, DataServerModeEnum
 from .local_handler import LocalHandler
 from .ceph_handler import CephHandler
 from .aws_s3_handler import AwsS3Handler

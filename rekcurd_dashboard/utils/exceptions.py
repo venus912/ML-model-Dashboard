@@ -1,7 +1,7 @@
 # coding: utf-8
 
 
-class RekcurdDashboardException(Exception):
+class venus912DashboardException(Exception):
     pass
 
 

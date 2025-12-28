@@ -6,10 +6,10 @@
 import traceback, types
 import grpc
 
-from rekcurd_dashboard.protobuf import rekcurd_pb2, rekcurd_pb2_grpc
+from venus912_dashboard.protobuf import venus912_pb2, venus912_pb2_grpc
 
-from rekcurd_dashboard.logger import SystemLoggerInterface, JsonSystemLogger
-from rekcurd_dashboard.utils import ProtobufUtil
+from venus912_dashboard.logger import SystemLoggerInterface, JsonSystemLogger
+from venus912_dashboard.utils import ProtobufUtil
 from werkzeug.datastructures import FileStorage
 from protobuf_to_dict import protobuf_to_dict
 
@@ -42,12 +42,12 @@ def error_handling(error_response):
     return _wrapper_maker
 
 
-class RekcurdDashboardClient:
+class venus912DashboardClient:
     _logger: SystemLoggerInterface = None
 
     def __init__(self, host: str = None, port: int = None,
                  application_name: str = None, service_level: str = None,
-                 rekcurd_grpc_version: str = None):
+                 venus912_grpc_version: str = None):
         self.logger = JsonSystemLogger()
 
         _host = "127.0.0.1"
@@ -55,17 +55,17 @@ class RekcurdDashboardClient:
         host = host or _host
         port = int(port or _port)
 
-        if rekcurd_grpc_version is None:
-            rekcurd_grpc_version = rekcurd_pb2.DESCRIPTOR.GetOptions().Extensions[rekcurd_pb2.rekcurd_grpc_proto_version]
+        if venus912_grpc_version is None:
+            venus912_grpc_version = venus912_pb2.DESCRIPTOR.GetOptions().Extensions[venus912_pb2.venus912_grpc_proto_version]
         else:
-            rekcurd_pb2.EnumVersionInfo.Value(rekcurd_grpc_version)
+            venus912_pb2.EnumVersionInfo.Value(venus912_grpc_version)
 
-        self.__metadata = [('x-rekcurd-application-name', application_name),
-                           ('x-rekcurd-sevice-level', service_level),
-                           ('x-rekcurd-grpc-version', rekcurd_grpc_version)]
+        self.__metadata = [('x-venus912-application-name', application_name),
+                           ('x-venus912-sevice-level', service_level),
+                           ('x-venus912-grpc-version', venus912_grpc_version)]
 
         channel = grpc.insecure_channel("{}:{}".format(host, port))
-        self.stub = rekcurd_pb2_grpc.RekcurdDashboardStub(channel)
+        self.stub = venus912_pb2_grpc.venus912DashboardStub(channel)
 
     @property
     def logger(self):
@@ -93,7 +93,7 @@ class RekcurdDashboardClient:
 
     @error_handling({"status": False})
     def run_service_info(self):
-        request = rekcurd_pb2.ServiceInfoRequest()
+        request = venus912_pb2.ServiceInfoRequest()
         response_protobuf = self.stub.ServiceInfo(request, metadata=self.__metadata)
         response = protobuf_to_dict(response_protobuf,
                                     including_default_value_fields=True)
@@ -101,7 +101,7 @@ class RekcurdDashboardClient:
 
     def __upload_model_request(self, model_path:str, f:FileStorage):
         for data in ProtobufUtil.stream_file(f):
-            request = rekcurd_pb2.UploadModelRequest(
+            request = venus912_pb2.UploadModelRequest(
                 path=model_path,
                 data=data
             )
@@ -119,7 +119,7 @@ class RekcurdDashboardClient:
 
     @error_handling({"status": False})
     def run_switch_service_model_assignment(self, model_path:str):
-        request = rekcurd_pb2.SwitchModelRequest(
+        request = venus912_pb2.SwitchModelRequest(
             path=model_path,
         )
         response_protobuf = self.stub.SwitchModel(request, metadata=self.__metadata)
@@ -130,7 +130,7 @@ class RekcurdDashboardClient:
         return response
 
     def run_evaluate_model(self, data_path:str, result_path:str):
-        request_iterator = iter([rekcurd_pb2.EvaluateModelRequest(data_path=data_path, result_path=result_path)])
+        request_iterator = iter([venus912_pb2.EvaluateModelRequest(data_path=data_path, result_path=result_path)])
         metrics = self.stub.EvaluateModel(request_iterator, metadata=self.__metadata).metrics
         response = dict(protobuf_to_dict(metrics, including_default_value_fields=True),
                         label=[self.__get_value_from_io(l) for l in metrics.label])
@@ -139,7 +139,7 @@ class RekcurdDashboardClient:
 
     def __upload_eval_data_request(self, f:FileStorage, data_path:str):
         for data in ProtobufUtil.stream_file(f):
-            request = rekcurd_pb2.UploadEvaluationDataRequest(data=data, data_path=data_path)
+            request = venus912_pb2.UploadEvaluationDataRequest(data=data, data_path=data_path)
             yield request
 
     @error_handling({"status": False})
@@ -149,7 +149,7 @@ class RekcurdDashboardClient:
                                     including_default_value_fields=True)
         return response
 
-    def __get_value_from_io(self, io:rekcurd_pb2.IO):
+    def __get_value_from_io(self, io:venus912_pb2.IO):
         if io.WhichOneof('io_oneof') == 'str':
             val = io.str.val
         else:
@@ -162,7 +162,7 @@ class RekcurdDashboardClient:
 
     @error_handling({"status": False})
     def run_evaluation_data(self, data_path:str, result_path:str):
-        request = rekcurd_pb2.EvaluationResultRequest(data_path=data_path, result_path=result_path)
+        request = venus912_pb2.EvaluationResultRequest(data_path=data_path, result_path=result_path)
         for raw_response in self.stub.EvaluationResult(request, metadata=self.__metadata):
             details = []
             for detail in raw_response.detail:

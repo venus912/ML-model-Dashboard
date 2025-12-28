@@ -1,6 +1,6 @@
-include rekcurd_dashboard/template/*
-include rekcurd_dashboard/static/**/*
-include rekcurd_dashboard/static/**/**/*
+include venus912_dashboard/template/*
+include venus912_dashboard/static/**/*
+include venus912_dashboard/static/**/**/*
 include requirements.txt
 include README.md
 include LICENSE

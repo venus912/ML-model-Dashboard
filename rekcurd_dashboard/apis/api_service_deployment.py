@@ -3,10 +3,10 @@ import math
 
 from flask_restplus import Namespace, fields, Resource, reqparse, inputs
 
-from . import status_model, apply_rekcurd_to_kubernetes, load_kubernetes_deployment_info
-from rekcurd_dashboard.core import RekcurdDashboardClient
-from rekcurd_dashboard.models import db, ApplicationModel, ServiceModel
-from rekcurd_dashboard.protobuf import rekcurd_pb2
+from . import status_model, apply_venus912_to_kubernetes, load_kubernetes_deployment_info
+from venus912_dashboard.core import venus912DashboardClient
+from venus912_dashboard.models import db, ApplicationModel, ServiceModel
+from venus912_dashboard.protobuf import venus912_pb2
 
 
 service_deployment_api_namespace = Namespace('service_deployments', description='Service Deployment API Endpoint.')
@@ -37,17 +37,17 @@ service_deployment_params = service_deployment_api_namespace.model('Deployment',
     ),
     'version': fields.String(
         required=False,
-        description='Rekcurd gRPC spec version. Default is the latest version.',
+        description='venus912 gRPC spec version. Default is the latest version.',
         example='v1'
     ),
     'insecure_host': fields.String(
         required=False,
-        description='Rekcurd server insecure host. Default is "[::]".',
+        description='venus912 server insecure host. Default is "[::]".',
         example='[::]'
     ),
     'insecure_port': fields.Integer(
         required=False,
-        description='Rekcurd server insecure port. Default is "5000".',
+        description='venus912 server insecure port. Default is "5000".',
         example=5000
     ),
     'replicas_default': fields.Integer(
@@ -98,19 +98,19 @@ service_deployment_params = service_deployment_api_namespace.model('Deployment',
     ),
     'service_git_url': fields.String(
         required=False,
-        description='URL of your git repository. If you use "rekcurd/rekcurd:tagname" image, '
+        description='URL of your git repository. If you use "venus912/venus912:tagname" image, '
                     'this field is necessary.',
-        example='https://github.com/rekcurd/rekcurd-example.git'
+        example='https://github.com/venus912/venus912-example.git'
     ),
     'service_git_branch': fields.String(
         required=False,
-        description='Name of your git branch. If you use "rekcurd/rekcurd:tagname" image, '
+        description='Name of your git branch. If you use "venus912/venus912:tagname" image, '
                     'this field is necessary.',
         example='master'
     ),
     'service_boot_script': fields.String(
         required=False,
-        description='Booting script for your service. If you use "rekcurd/rekcurd:tagname" image, '
+        description='Booting script for your service. If you use "venus912/venus912:tagname" image, '
                     'this field is necessary.',
         example='start.sh'
     ),
@@ -156,8 +156,8 @@ class ApiSingleServiceRegistration(Resource):
     single_worker_parser.add_argument(
         'version', location='form', type=str, required=False,
         choices=('v0', 'v1', 'v2'),
-        default=rekcurd_pb2.DESCRIPTOR.GetOptions().Extensions[rekcurd_pb2.rekcurd_grpc_proto_version],
-        help='Rekcurd gRPC spec version. Default is the latest version.')
+        default=venus912_pb2.DESCRIPTOR.GetOptions().Extensions[venus912_pb2.venus912_grpc_proto_version],
+        help='venus912 gRPC spec version. Default is the latest version.')
     single_worker_parser.add_argument(
         'service_level', location='form', type=str, required=True,
         choices=('development','beta','staging','sandbox','production'),
@@ -167,10 +167,10 @@ class ApiSingleServiceRegistration(Resource):
         help='Model ID which is assigned to the service.')
     single_worker_parser.add_argument(
         'insecure_host', location='form', type=str, default="localhost", required=False,
-        help='Rekcurd server host. Default is "localhost".')
+        help='venus912 server host. Default is "localhost".')
     single_worker_parser.add_argument(
         'insecure_port', location='form', type=int, default=5000, required=False,
-        help='Rekcurd server port. Default is "5000".')
+        help='venus912 server port. Default is "5000".')
 
     @service_deployment_api_namespace.marshal_with(success_or_not)
     @service_deployment_api_namespace.expect(single_worker_parser)
@@ -180,17 +180,17 @@ class ApiSingleServiceRegistration(Resource):
         display_name = args["display_name"]
         description = args["description"]
         service_level = args["service_level"]
-        version = args["version"] or rekcurd_pb2.DESCRIPTOR.GetOptions().Extensions[rekcurd_pb2.rekcurd_grpc_proto_version]
+        version = args["version"] or venus912_pb2.DESCRIPTOR.GetOptions().Extensions[venus912_pb2.venus912_grpc_proto_version]
         service_model_assignment = args["service_model_assignment"]
         insecure_host = args["insecure_host"]
         insecure_port = args["insecure_port"]
 
         application_model: ApplicationModel = db.session.query(ApplicationModel).filter(
             ApplicationModel.application_id == application_id).first_or_404()
-        rekcurd_dashboard_client = RekcurdDashboardClient(
+        venus912_dashboard_client = venus912DashboardClient(
             host=insecure_host, port=insecure_port, application_name=application_model.application_name,
-            service_level=service_level, rekcurd_grpc_version=version)
-        service_info = rekcurd_dashboard_client.run_service_info()
+            service_level=service_level, venus912_grpc_version=version)
+        service_info = venus912_dashboard_client.run_service_info()
         service_id = service_info["service_name"]  # TODO: renaming
 
         service_model = ServiceModel(
@@ -217,18 +217,18 @@ class ApiServiceDeployment(Resource):
     service_deployment_parser.add_argument(
         'version', location='form', type=str, required=False,
         choices=('v0', 'v1', 'v2'),
-        default=rekcurd_pb2.DESCRIPTOR.GetOptions().Extensions[rekcurd_pb2.rekcurd_grpc_proto_version],
-        help='Rekcurd gRPC spec version. Default is the latest version.')
+        default=venus912_pb2.DESCRIPTOR.GetOptions().Extensions[venus912_pb2.venus912_grpc_proto_version],
+        help='venus912 gRPC spec version. Default is the latest version.')
     service_deployment_parser.add_argument(
         'service_level', location='form', type=str, required=True,
         choices=('development','beta','staging','sandbox','production'),
         help='Service level. [development/beta/staging/sandbox/production].')
     service_deployment_parser.add_argument(
         'insecure_host', location='form', type=str, default="[::]", required=False,
-        help='Rekcurd server insecure host. Default is "[::]".')
+        help='venus912 server insecure host. Default is "[::]".')
     service_deployment_parser.add_argument(
         'insecure_port', location='form', type=int, default=5000, required=False,
-        help='Rekcurd server insecure port. Default is "5000".')
+        help='venus912 server insecure port. Default is "5000".')
     service_deployment_parser.add_argument(
         'replicas_default', location='form', type=int, default=1, required=False,
         help='Number of pod at beginning. Default is "1".')
@@ -259,13 +259,13 @@ class ApiServiceDeployment(Resource):
         help='Model ID which is assigned to the service.')
     service_deployment_parser.add_argument(
         'service_git_url', location='form', type=str, default="", required=False,
-        help='URL of your git repository. If you use "rekcurd/rekcurd:tagname" image, this field is necessary.')
+        help='URL of your git repository. If you use "venus912/venus912:tagname" image, this field is necessary.')
     service_deployment_parser.add_argument(
         'service_git_branch', location='form', type=str, default="", required=False,
-        help='Name of your git branch. If you use "rekcurd/rekcurd:tagname" image, this field is necessary.')
+        help='Name of your git branch. If you use "venus912/venus912:tagname" image, this field is necessary.')
     service_deployment_parser.add_argument(
         'service_boot_script', location='form', type=str, default="", required=False,
-        help='Booting script for your service. If you use "rekcurd/rekcurd:tagname" image, this field is necessary.')
+        help='Booting script for your service. If you use "venus912/venus912:tagname" image, this field is necessary.')
     service_deployment_parser.add_argument(
         'resource_request_cpu', location='form', type=float, default=1.0, required=True,
         help='CPU reservation for your service.')
@@ -296,7 +296,7 @@ class ApiServiceDeployment(Resource):
             args['resource_limit_cpu'] = args['resource_request_cpu']
         if args['resource_limit_memory'] is None:
             args['resource_limit_memory'] = args['resource_request_memory']
-        apply_rekcurd_to_kubernetes(project_id=project_id, application_id=application_id, **args)
+        apply_venus912_to_kubernetes(project_id=project_id, application_id=application_id, **args)
         db.session.commit()
         db.session.close()
         return {"status": True, "message": "Success."}
@@ -314,18 +314,18 @@ class ApiServiceIdDeployment(Resource):
     patch_parser.add_argument(
         'version', location='form', type=str, required=True,
         choices=('v0', 'v1', 'v2'),
-        default=rekcurd_pb2.DESCRIPTOR.GetOptions().Extensions[rekcurd_pb2.rekcurd_grpc_proto_version],
-        help='Rekcurd gRPC spec version. Default is the latest version.')
+        default=venus912_pb2.DESCRIPTOR.GetOptions().Extensions[venus912_pb2.venus912_grpc_proto_version],
+        help='venus912 gRPC spec version. Default is the latest version.')
     patch_parser.add_argument(
         'service_level', location='form', type=str, required=True,
         choices=('development','beta','staging','sandbox','production'),
         help='Service level. [development/beta/staging/sandbox/production].')
     patch_parser.add_argument(
         'insecure_host', location='form', type=str, required=True,
-        help='Rekcurd server insecure host. Default is "[::]".')
+        help='venus912 server insecure host. Default is "[::]".')
     patch_parser.add_argument(
         'insecure_port', location='form', type=int, required=True,
-        help='Rekcurd server insecure port. Default is "5000".')
+        help='venus912 server insecure port. Default is "5000".')
     patch_parser.add_argument(
         'replicas_default', location='form', type=int, required=True,
         help='Number of pod at beginning. Default is "1".')
@@ -356,13 +356,13 @@ class ApiServiceIdDeployment(Resource):
         help='Model ID which is assigned to the service.')
     patch_parser.add_argument(
         'service_git_url', location='form', type=str, required=True,
-        help='URL of your git repository. If you use "rekcurd/rekcurd:tagname" image, this field is necessary.')
+        help='URL of your git repository. If you use "venus912/venus912:tagname" image, this field is necessary.')
     patch_parser.add_argument(
         'service_git_branch', location='form', type=str, required=True,
-        help='Name of your git branch. If you use "rekcurd/rekcurd:tagname" image, this field is necessary.')
+        help='Name of your git branch. If you use "venus912/venus912:tagname" image, this field is necessary.')
     patch_parser.add_argument(
         'service_boot_script', location='form', type=str, required=True,
-        help='Booting script for your service. If you use "rekcurd/rekcurd:tagname" image, this field is necessary.')
+        help='Booting script for your service. If you use "venus912/venus912:tagname" image, this field is necessary.')
     patch_parser.add_argument(
         'resource_request_cpu', location='form', type=float, required=True,
         help='CPU reservation for your service.')
@@ -419,7 +419,7 @@ class ApiServiceIdDeployment(Resource):
         """Rolling update of Kubernetes deployment configurations."""
         args = self.patch_parser.parse_args()
         args['commit_message'] = "Update at {0:%Y%m%d%H%M%S}".format(datetime.datetime.utcnow())
-        apply_rekcurd_to_kubernetes(
+        apply_venus912_to_kubernetes(
             project_id=project_id, application_id=application_id, service_id=service_id, **args)
 
         service_model: ServiceModel = db.session.query(ServiceModel).filter(

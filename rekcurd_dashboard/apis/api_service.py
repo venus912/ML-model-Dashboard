@@ -2,14 +2,14 @@ from flask_restplus import Namespace, fields, Resource, reqparse
 
 from . import (
     DatetimeToTimestamp, status_model,
-    switch_model_assignment, delete_kubernetes_deployment, RekcurdDashboardException
+    switch_model_assignment, delete_kubernetes_deployment, venus912DashboardException
 )
-from rekcurd_dashboard.core import RekcurdDashboardClient
-from rekcurd_dashboard.models import (
+from venus912_dashboard.core import venus912DashboardClient
+from venus912_dashboard.models import (
     db, ProjectModel, KubernetesModel, DataServerModel,
     DataServerModeEnum, ApplicationModel, ServiceModel, ModelModel
 )
-from rekcurd_dashboard.protobuf import rekcurd_pb2
+from venus912_dashboard.protobuf import venus912_pb2
 
 
 service_api_namespace = Namespace('services', description='Service API Endpoint.')
@@ -40,7 +40,7 @@ service_model_params = service_api_namespace.model('Service', {
     ),
     'version': fields.String(
         required=True,
-        description='Rekcurd gRPC spec version.',
+        description='venus912 gRPC spec version.',
         example='v1'
     ),
     'model_id': fields.Integer(
@@ -50,7 +50,7 @@ service_model_params = service_api_namespace.model('Service', {
     'insecure_host': fields.String(
         required=True,
         description='Insecure host.',
-        example='rekcurd-sample.example.com'
+        example='venus912-sample.example.com'
     ),
     'insecure_port': fields.Integer(
         required=True,
@@ -82,7 +82,7 @@ class ApiServiceId(Resource):
     update_config_parser.add_argument('description', type=str, required=False, location='form')
     update_config_parser.add_argument(
         'version', type=str, required=False, location='form',
-        default=rekcurd_pb2.DESCRIPTOR.GetOptions().Extensions[rekcurd_pb2.rekcurd_grpc_proto_version],
+        default=venus912_pb2.DESCRIPTOR.GetOptions().Extensions[venus912_pb2.venus912_grpc_proto_version],
         choices=('v0', 'v1', 'v2'))
 
     @service_api_namespace.marshal_with(service_model_params)
@@ -103,7 +103,7 @@ class ApiServiceId(Resource):
         service_model: ServiceModel = db.session.query(ServiceModel).filter(
             ServiceModel.service_id == service_id).first_or_404()
         if service_model.model_id == model_id:
-            raise RekcurdDashboardException("No need to switch model.")
+            raise venus912DashboardException("No need to switch model.")
         if project_model.use_kubernetes and data_server_model.data_server_mode != DataServerModeEnum.LOCAL:
             """If Kubernetes mode and data_sever_mode is not LOCAL, then request switch to Kubernetes WebAPI"""
             switch_model_assignment(project_id, application_id, service_id, model_id)
@@ -114,12 +114,12 @@ class ApiServiceId(Resource):
                 ApplicationModel.application_id == application_id).first_or_404()
             model_model: ModelModel = db.session.query(ModelModel).filter(
                 ModelModel.model_id == model_id).first_or_404()
-            rekcurd_dashboard_application = RekcurdDashboardClient(
+            venus912_dashboard_application = venus912DashboardClient(
                 host=service_model.insecure_host, port=service_model.insecure_port, application_name=application_model.application_name,
-                service_level=service_model.service_level, rekcurd_grpc_version=service_model.version)
-            response_body = rekcurd_dashboard_application.run_switch_service_model_assignment(model_model.filepath)
+                service_level=service_model.service_level, venus912_grpc_version=service_model.version)
+            response_body = venus912_dashboard_application.run_switch_service_model_assignment(model_model.filepath)
             if not response_body.get("status", True):
-                raise RekcurdDashboardException(response_body.get("message", "Error."))
+                raise venus912DashboardException(response_body.get("message", "Error."))
             service_model.model_id = model_id
 
         db.session.commit()

@@ -1,7 +1,7 @@
 from functools import wraps
 from unittest.mock import patch, Mock, mock_open
 
-from rekcurd_dashboard.models import db, KubernetesModel
+from venus912_dashboard.models import db, KubernetesModel
 
 from test.base import BaseTestCase, TEST_PROJECT_ID
 
@@ -14,17 +14,17 @@ def mock_decorator():
         @wraps(func)
         def inner_method(*args, **kwargs):
             with patch('builtins.open', new_callable=mock_open) as _, \
-                    patch('rekcurd_dashboard.apis.api_kubernetes.update_kubernetes_deployment_info',
+                    patch('venus912_dashboard.apis.api_kubernetes.update_kubernetes_deployment_info',
                           new=Mock(return_value=True)) as _, \
-                    patch('rekcurd_dashboard.apis.api_kubernetes.check_kubernetes_configfile',
+                    patch('venus912_dashboard.apis.api_kubernetes.check_kubernetes_configfile',
                           new=Mock(return_value=True)) as _, \
-                    patch('rekcurd_dashboard.apis.api_kubernetes.save_kubernetes_access_file',
+                    patch('venus912_dashboard.apis.api_kubernetes.save_kubernetes_access_file',
                           new=Mock(return_value=True)) as _, \
-                    patch('rekcurd_dashboard.apis.api_kubernetes.remove_kubernetes_access_file',
+                    patch('venus912_dashboard.apis.api_kubernetes.remove_kubernetes_access_file',
                           new=Mock(return_value=True)) as _, \
-                    patch('rekcurd_dashboard.apis.api_kubernetes.backup_kubernetes_deployment',
+                    patch('venus912_dashboard.apis.api_kubernetes.backup_kubernetes_deployment',
                           new=Mock(return_value=True)) as _, \
-                    patch('rekcurd_dashboard.apis.api_kubernetes.backup_istio_routing',
+                    patch('venus912_dashboard.apis.api_kubernetes.backup_istio_routing',
                           new=Mock(return_value=True)) as _:
                 return func(*args, **kwargs)
         return inner_method

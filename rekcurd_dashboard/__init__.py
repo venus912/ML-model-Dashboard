@@ -1,4 +1,4 @@
-# Copyright 2018 The Rekcurd Authors.
+# Copyright 2018 The venus912 Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from rekcurd_dashboard import _project
-from rekcurd_dashboard import _version
+from venus912_dashboard import _project
+from venus912_dashboard import _version
 
 __project__ = _project.__project__
 __version__ = _version.__version__

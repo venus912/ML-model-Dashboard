@@ -12,7 +12,7 @@ services:
       NODE_ENV: production
       API_HOST: ${API_HOST:-http://localhost}
       API_PORT: 18080
-      REKCURD_DASHBOARD_FRONTEND_PORT: ${REKCURD_DASHBOARD_FRONTEND_PORT:-8080}
+      venus912_DASHBOARD_FRONTEND_PORT: ${venus912_DASHBOARD_FRONTEND_PORT:-8080}
     command:
       - /bin/bash
       - -c
@@ -20,13 +20,13 @@ services:
     depends_on:
       - dashboard-backend
     ports:
-      - "${REKCURD_DASHBOARD_FRONTEND_PORT:-8080}:${REKCURD_DASHBOARD_FRONTEND_PORT:-8080}"
+      - "${venus912_DASHBOARD_FRONTEND_PORT:-8080}:${venus912_DASHBOARD_FRONTEND_PORT:-8080}"
     restart: always
   dashboard-backend:
     container_name: dashboard-backend-for-aws
     build:
       context: ../..
-      dockerfile: ./rekcurd_dashboard/Dockerfile
+      dockerfile: ./venus912_dashboard/Dockerfile
     volumes:
       - ../../:/root/dashboard
       - ~/.aws:/root/.aws
@@ -36,7 +36,7 @@ services:
     command:
       - /bin/bash
       - -c
-      - "pip install -r requirements.txt && pip install -e . && cd rekcurd_dashboard && (rekcurd_dashboard db init --settings settings.yml || true) && (rekcurd_dashboard db migrate --settings settings.yml || true) && rekcurd_dashboard server --settings settings.yml"
+      - "pip install -r requirements.txt && pip install -e . && cd venus912_dashboard && (venus912_dashboard db init --settings settings.yml || true) && (venus912_dashboard db migrate --settings settings.yml || true) && venus912_dashboard server --settings settings.yml"
     ports:
       - "18080:18080"
     restart: always

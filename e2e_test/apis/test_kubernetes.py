@@ -1,7 +1,7 @@
 import uuid
 
-from rekcurd_dashboard.models import db, KubernetesModel
-from rekcurd_dashboard.apis.kubernetes_handler import get_full_config_path
+from venus912_dashboard.models import db, KubernetesModel
+from venus912_dashboard.apis.kubernetes_handler import get_full_config_path
 
 from e2e_test.base import (
     BaseTestCase, TEST_PROJECT_ID, kube_setting2, create_kubernetes_model, WorkerConfiguration
@@ -31,9 +31,9 @@ def get_default_args():
     args['resource_limit_cpu'] = container['resources']['limits']['cpu']
     args['resource_limit_memory'] = container['resources']['limits']['memory']
     args['commit_message'] = 'A message.'
-    args['service_git_url'] = envs['REKCURD_SERVICE_GIT_URL']
-    args['service_git_branch'] = envs['REKCURD_SERVICE_GIT_BRANCH']
-    args['service_boot_script'] = envs['REKCURD_SERVICE_BOOT_SHELL']
+    args['service_git_url'] = envs['venus912_SERVICE_GIT_URL']
+    args['service_git_branch'] = envs['venus912_SERVICE_GIT_BRANCH']
+    args['service_boot_script'] = envs['venus912_SERVICE_BOOT_SHELL']
     return args
 
 

@@ -1,6 +1,6 @@
 import unittest
 
-from rekcurd_dashboard.logger import JsonSystemLogger
+from venus912_dashboard.logger import JsonSystemLogger
 
 
 class JsonSystemLoggerTest(unittest.TestCase):

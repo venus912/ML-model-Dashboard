@@ -1,9 +1,9 @@
 from flask_restplus import Namespace, fields, Resource, reqparse, inputs
 
 from . import status_model
-from rekcurd_dashboard.models import db, DataServerModel, DataServerModeEnum
-from rekcurd_dashboard.utils import RekcurdDashboardException
-from rekcurd_dashboard.apis import DatetimeToTimestamp
+from venus912_dashboard.models import db, DataServerModel, DataServerModeEnum
+from venus912_dashboard.utils import venus912DashboardException
+from venus912_dashboard.apis import DatetimeToTimestamp
 
 
 data_server_api_namespace = Namespace('dataservers', description='Data Server API Endpoint.')
@@ -159,28 +159,28 @@ class ApiDataServers(Resource):
                     ceph_port and ceph_is_secure is not None and ceph_bucket_name:
                 pass
             else:
-                raise RekcurdDashboardException(
+                raise venus912DashboardException(
                     "Need to set \"ceph_access_key\", \"ceph_secret_key\", \"ceph_host\", \"ceph_port\", "
                     "\"ceph_is_secure\" and \"ceph_bucket_name\"")
         elif data_server_mode_enum == DataServerModeEnum.AWS_S3:
             if aws_bucket_name:
                 pass
             else:
-                raise RekcurdDashboardException(
+                raise venus912DashboardException(
                     "Need to set \"aws_bucket_name\"")
         elif data_server_mode_enum == DataServerModeEnum.GCS:
             if gcs_access_key and gcs_secret_key and gcs_bucket_name:
                 pass
             else:
-                raise RekcurdDashboardException(
+                raise venus912DashboardException(
                     "Need to set \"gcs_access_key\", \"gcs_secret_key\" and \"gcs_bucket_name\"")
         else:
-            raise RekcurdDashboardException("Invalid data server mode specified.")
+            raise venus912DashboardException("Invalid data server mode specified.")
 
         data_server_model = db.session.query(DataServerModel).filter(
             DataServerModel.project_id == project_id).one_or_none()
         if data_server_model is not None:
-            raise RekcurdDashboardException("Data server exists already.")
+            raise venus912DashboardException("Data server exists already.")
         data_server_model = DataServerModel(
             project_id=project_id, data_server_mode=data_server_mode_enum,
             ceph_access_key=ceph_access_key, ceph_secret_key=ceph_secret_key,
@@ -264,24 +264,24 @@ class ApiDataServers(Resource):
                     data_server_model.ceph_is_secure is not None and data_server_model.ceph_bucket_name:
                 pass
             else:
-                raise RekcurdDashboardException(
+                raise venus912DashboardException(
                     "Need to set \"ceph_access_key\", \"ceph_secret_key\", \"ceph_host\", \"ceph_port\", "
                     "\"ceph_is_secure\" and \"ceph_bucket_name\"")
         elif data_server_mode_enum == DataServerModeEnum.AWS_S3:
             if data_server_model.aws_bucket_name:
                 pass
             else:
-                raise RekcurdDashboardException(
+                raise venus912DashboardException(
                     "Need to set \"aws_bucket_name\"")
         elif data_server_mode_enum == DataServerModeEnum.GCS:
             if data_server_model.gcs_access_key and data_server_model.gcs_secret_key and \
                     data_server_model.gcs_bucket_name:
                 pass
             else:
-                raise RekcurdDashboardException(
+                raise venus912DashboardException(
                     "Need to set \"gcs_access_key\", \"gcs_secret_key\" and \"gcs_bucket_name\"")
         else:
-            raise RekcurdDashboardException("Invalid data server mode specified.")
+            raise venus912DashboardException("Invalid data server mode specified.")
 
         if is_updated:
             db.session.commit()

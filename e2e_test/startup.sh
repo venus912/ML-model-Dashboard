@@ -65,9 +65,9 @@ configure_cluster () {
 }
 
 # Run test minikube clusters
-configure_cluster rekcurd-test1
+configure_cluster venus912-test1
 kubectl config view --flatten --minify > ${KUBE_CONFIG_PATH1:-/tmp/kube-config-path1}
-export KUBE_IP1=$(minikube ip -p rekcurd-test1)
+export KUBE_IP1=$(minikube ip -p venus912-test1)
 
 
 # Setup Istio
@@ -80,7 +80,7 @@ cat <<EOF | kubectl apply -f -
 apiVersion: networking.istio.io/v1alpha3
 kind: ServiceEntry
 metadata:
-  name: rekcurd-egress-service-entry
+  name: venus912-egress-service-entry
 spec:
   hosts:
   - "*.local"
@@ -107,7 +107,7 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: rekcurd-egress-virtual-service
+  name: venus912-egress-virtual-service
 spec:
   hosts:
   - "*.local"
@@ -203,7 +203,7 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: rekcurd-ingress-gateway
+  name: venus912-ingress-gateway
   namespace: development
 spec:
   selector:

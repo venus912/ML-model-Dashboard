@@ -2,7 +2,7 @@ import unittest
 
 from werkzeug.datastructures import FileStorage
 
-from rekcurd_dashboard.utils import ProtobufUtil
+from venus912_dashboard.utils import ProtobufUtil
 
 
 class ProtobufUtilTest(unittest.TestCase):

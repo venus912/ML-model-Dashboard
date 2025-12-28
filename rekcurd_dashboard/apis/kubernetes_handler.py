@@ -6,10 +6,10 @@ from datetime import datetime
 from pathlib import Path
 
 from . import (
-    api, RekcurdDashboardException, kubernetes_cpu_to_float,
+    api, venus912DashboardException, kubernetes_cpu_to_float,
     GIT_SECRET_PREFIX, GIT_ID_RSA, GIT_CONFIG, GIT_SSH_MODE, GIT_SSH_MOUNT_DIR
 )
-from rekcurd_dashboard.models import (
+from venus912_dashboard.models import (
     db, DataServerModel, KubernetesModel, ApplicationModel,
     ServiceModel, ModelModel
 )
@@ -71,7 +71,7 @@ def update_kubernetes_deployment_info(kubernetes_model: KubernetesModel):
     """Application registration."""
     for i in list_deployment_for_all_namespaces.items:
         labels = i.metadata.labels
-        if labels is None or labels.get("rekcurd-worker", "False") == "False":
+        if labels is None or labels.get("venus912-worker", "False") == "False":
             continue
 
         application_id = labels["id"]
@@ -89,7 +89,7 @@ def update_kubernetes_deployment_info(kubernetes_model: KubernetesModel):
     """Service registration."""
     for i in list_deployment_for_all_namespaces.items:
         labels = i.metadata.labels
-        if labels is None or labels.get("rekcurd-worker", "False") == "False":
+        if labels is None or labels.get("venus912-worker", "False") == "False":
             continue
 
         application_id = labels["id"]
@@ -103,13 +103,13 @@ def update_kubernetes_deployment_info(kubernetes_model: KubernetesModel):
             insecure_host = None
             insecure_port = None
             for env_ent in i.spec.template.spec.containers[0].env:
-                if env_ent.name == "REKCURD_GRPC_PROTO_VERSION":
+                if env_ent.name == "venus912_GRPC_PROTO_VERSION":
                     version = env_ent.value
-                elif env_ent.name == "REKCURD_MODEL_FILE_PATH":
+                elif env_ent.name == "venus912_MODEL_FILE_PATH":
                     filepath = env_ent.value
-                elif env_ent.name == "REKCURD_SERVICE_INSECURE_HOST":
+                elif env_ent.name == "venus912_SERVICE_INSECURE_HOST":
                     insecure_host = env_ent.value
-                elif env_ent.name == "REKCURD_SERVICE_INSECURE_PORT":
+                elif env_ent.name == "venus912_SERVICE_INSECURE_PORT":
                     insecure_port = int(env_ent.value)
 
             """Model registration."""
@@ -137,7 +137,7 @@ def update_kubernetes_deployment_info(kubernetes_model: KubernetesModel):
     return
 
 
-def apply_rekcurd_to_kubernetes(
+def apply_venus912_to_kubernetes(
         project_id: int, application_id: str, service_level: str, version: str,
         insecure_host: str, insecure_port: int, replicas_default: int, replicas_minimum: int,
         replicas_maximum: int, autoscale_cpu_threshold: str, policy_max_surge: int,
@@ -247,107 +247,107 @@ def apply_rekcurd_to_kubernetes(
 
         pod_env = [
             client.V1EnvVar(
-                name="REKCURD_SERVICE_UPDATE_FLAG",
+                name="venus912_SERVICE_UPDATE_FLAG",
                 value=commit_message
             ),
             client.V1EnvVar(
-                name="REKCURD_KUBERNETES_MODE",
+                name="venus912_KUBERNETES_MODE",
                 value="True"
             ),
             client.V1EnvVar(
-                name="REKCURD_DEBUG_MODE",
+                name="venus912_DEBUG_MODE",
                 value=str(debug_mode)
             ),
             client.V1EnvVar(
-                name="REKCURD_APPLICATION_NAME",
+                name="venus912_APPLICATION_NAME",
                 value=application_name
             ),
             client.V1EnvVar(
-                name="REKCURD_SERVICE_INSECURE_HOST",
+                name="venus912_SERVICE_INSECURE_HOST",
                 value=insecure_host
             ),
             client.V1EnvVar(
-                name="REKCURD_SERVICE_INSECURE_PORT",
+                name="venus912_SERVICE_INSECURE_PORT",
                 value=str(insecure_port)
             ),
             client.V1EnvVar(
-                name="REKCURD_SERVICE_ID",
+                name="venus912_SERVICE_ID",
                 value=service_id
             ),
             client.V1EnvVar(
-                name="REKCURD_SERVICE_LEVEL",
+                name="venus912_SERVICE_LEVEL",
                 value=service_level
             ),
             client.V1EnvVar(
-                name="REKCURD_GRPC_PROTO_VERSION",
+                name="venus912_GRPC_PROTO_VERSION",
                 value=version
             ),
             client.V1EnvVar(
-                name="REKCURD_MODEL_MODE",
+                name="venus912_MODEL_MODE",
                 value=data_server_model.data_server_mode.value
             ),
             client.V1EnvVar(
-                name="REKCURD_MODEL_FILE_PATH",
+                name="venus912_MODEL_FILE_PATH",
                 value=model_model.filepath
             ),
             client.V1EnvVar(
-                name="REKCURD_CEPH_ACCESS_KEY",
+                name="venus912_CEPH_ACCESS_KEY",
                 value=str(data_server_model.ceph_access_key or "xxx")
             ),
             client.V1EnvVar(
-                name="REKCURD_CEPH_SECRET_KEY",
+                name="venus912_CEPH_SECRET_KEY",
                 value=str(data_server_model.ceph_secret_key or "xxx")
             ),
             client.V1EnvVar(
-                name="REKCURD_CEPH_HOST",
+                name="venus912_CEPH_HOST",
                 value=str(data_server_model.ceph_host or "xxx")
             ),
             client.V1EnvVar(
-                name="REKCURD_CEPH_PORT",
+                name="venus912_CEPH_PORT",
                 value=str(data_server_model.ceph_port or "1234")
             ),
             client.V1EnvVar(
-                name="REKCURD_CEPH_IS_SECURE",
+                name="venus912_CEPH_IS_SECURE",
                 value=str(data_server_model.ceph_is_secure or "False")
             ),
             client.V1EnvVar(
-                name="REKCURD_CEPH_BUCKET_NAME",
+                name="venus912_CEPH_BUCKET_NAME",
                 value=str(data_server_model.ceph_bucket_name or "xxx")
             ),
             client.V1EnvVar(
-                name="REKCURD_AWS_ACCESS_KEY",
+                name="venus912_AWS_ACCESS_KEY",
                 value=str(data_server_model.aws_access_key or "xxx")
             ),
             client.V1EnvVar(
-                name="REKCURD_AWS_SECRET_KEY",
+                name="venus912_AWS_SECRET_KEY",
                 value=str(data_server_model.aws_secret_key or "xxx")
             ),
             client.V1EnvVar(
-                name="REKCURD_AWS_BUCKET_NAME",
+                name="venus912_AWS_BUCKET_NAME",
                 value=str(data_server_model.aws_bucket_name or "xxx")
             ),
             client.V1EnvVar(
-                name="REKCURD_GCS_ACCESS_KEY",
+                name="venus912_GCS_ACCESS_KEY",
                 value=str(data_server_model.gcs_access_key or "xxx")
             ),
             client.V1EnvVar(
-                name="REKCURD_GCS_SECRET_KEY",
+                name="venus912_GCS_SECRET_KEY",
                 value=str(data_server_model.gcs_secret_key or "xxx")
             ),
             client.V1EnvVar(
-                name="REKCURD_GCS_BUCKET_NAME",
+                name="venus912_GCS_BUCKET_NAME",
                 value=str(data_server_model.gcs_bucket_name or "xxx")
             ),
             client.V1EnvVar(
-                name="REKCURD_SERVICE_GIT_URL",
+                name="venus912_SERVICE_GIT_URL",
                 value=service_git_url
             ),
             client.V1EnvVar(
-                name="REKCURD_SERVICE_GIT_BRANCH",
+                name="venus912_SERVICE_GIT_BRANCH",
                 value=service_git_branch
             ),
             client.V1EnvVar(
-                name="REKCURD_SERVICE_BOOT_SHELL",
+                name="venus912_SERVICE_BOOT_SHELL",
                 value=service_boot_script
             ),
         ]
@@ -376,7 +376,7 @@ def apply_rekcurd_to_kubernetes(
             metadata=client.V1ObjectMeta(
                 name="deploy-{0}".format(service_id),
                 namespace=service_level,
-                labels={"rekcurd-worker": "True", "id": application_id,
+                labels={"venus912-worker": "True", "id": application_id,
                         "name": application_name, "sel": service_id}
             ),
             spec=client.V1DeploymentSpec(
@@ -395,7 +395,7 @@ def apply_rekcurd_to_kubernetes(
                 ),
                 template=client.V1PodTemplateSpec(
                     metadata=client.V1ObjectMeta(
-                        labels={"rekcurd-worker": "True", "id": application_id,
+                        labels={"venus912-worker": "True", "id": application_id,
                                 "name": application_name, "sel": service_id}
                     ),
                     spec=client.V1PodSpec(
@@ -473,7 +473,7 @@ def apply_rekcurd_to_kubernetes(
             metadata=client.V1ObjectMeta(
                 name="svc-{0}".format(service_id),
                 namespace=service_level,
-                labels={"rekcurd-worker": "True", "id": application_id,
+                labels={"venus912-worker": "True", "id": application_id,
                         "name": application_name, "sel": service_id}
             ),
             spec=client.V1ServiceSpec(
@@ -510,7 +510,7 @@ def apply_rekcurd_to_kubernetes(
             metadata=client.V1ObjectMeta(
                 name="hpa-{0}".format(service_id),
                 namespace=service_level,
-                labels={"rekcurd-worker": "True", "id": application_id,
+                labels={"venus912-worker": "True", "id": application_id,
                         "name": application_name, "sel": service_id}
             ),
             spec=client.V1HorizontalPodAutoscalerSpec(
@@ -554,7 +554,7 @@ def apply_rekcurd_to_kubernetes(
                 "apiVersion": "networking.istio.io/v1alpha3",
                 "kind": "VirtualService",
                 "metadata": {
-                    "labels": {"rekcurd-worker": "True", "id": application_id, "name": application_name},
+                    "labels": {"venus912-worker": "True", "id": application_id, "name": application_name},
                     "name": "ing-vs-{0}".format(application_id),
                     "namespace": service_level
                 },
@@ -563,20 +563,20 @@ def apply_rekcurd_to_kubernetes(
                         "*"
                     ],
                     "gateways": [
-                        "rekcurd-ingress-gateway"
+                        "venus912-ingress-gateway"
                     ],
                     "http": [
                         {
                             "match": [
                                 {
                                     "headers": {
-                                        "x-rekcurd-application-name": {
+                                        "x-venus912-application-name": {
                                             "exact": application_name
                                         },
-                                        "x-rekcurd-sevice-level": {
+                                        "x-venus912-sevice-level": {
                                             "exact": service_level
                                         },
-                                        "x-rekcurd-grpc-version": {
+                                        "x-venus912-grpc-version": {
                                             "exact": version
                                         },
                                     }
@@ -708,7 +708,7 @@ def apply_new_route_weight(
         service_weight_dict[key] = int(service_weights[i])
         service_weight_checker.append(int(service_weights[i]))
     if sum(service_weight_checker) != 100:
-        raise RekcurdDashboardException("total weight must be 100.")
+        raise venus912DashboardException("total weight must be 100.")
     for kubernetes_model in db.session.query(KubernetesModel).filter(KubernetesModel.project_id == project_id).all():
         full_config_path = get_full_config_path(kubernetes_model.config_path)
         from kubernetes import client, config
@@ -783,23 +783,23 @@ def load_kubernetes_deployment_info(project_id: int, application_id: str, servic
     deployment_info["application_name"] = v1_deployment.metadata.labels["name"]
     deployment_info["service_id"] = service_id
     for env_ent in v1_deployment.spec.template.spec.containers[0].env:
-        if env_ent.name == "REKCURD_SERVICE_UPDATE_FLAG":
+        if env_ent.name == "venus912_SERVICE_UPDATE_FLAG":
             deployment_info["commit_message"] = env_ent.value
-        elif env_ent.name == "REKCURD_SERVICE_INSECURE_HOST":
+        elif env_ent.name == "venus912_SERVICE_INSECURE_HOST":
             deployment_info["insecure_host"] = env_ent.value
-        elif env_ent.name == "REKCURD_SERVICE_INSECURE_PORT":
+        elif env_ent.name == "venus912_SERVICE_INSECURE_PORT":
             deployment_info["insecure_port"] = int(env_ent.value)
-        elif env_ent.name == "REKCURD_SERVICE_LEVEL":
+        elif env_ent.name == "venus912_SERVICE_LEVEL":
             deployment_info["service_level"] = env_ent.value
-        elif env_ent.name == "REKCURD_GRPC_PROTO_VERSION":
+        elif env_ent.name == "venus912_GRPC_PROTO_VERSION":
             deployment_info["version"] = env_ent.value
-        elif env_ent.name == "REKCURD_MODEL_FILE_PATH":
+        elif env_ent.name == "venus912_MODEL_FILE_PATH":
             filepath = env_ent.value
-        elif env_ent.name == "REKCURD_SERVICE_GIT_URL":
+        elif env_ent.name == "venus912_SERVICE_GIT_URL":
             deployment_info["service_git_url"] = env_ent.value
-        elif env_ent.name == "REKCURD_SERVICE_GIT_BRANCH":
+        elif env_ent.name == "venus912_SERVICE_GIT_BRANCH":
             deployment_info["service_git_branch"] = env_ent.value
-        elif env_ent.name == "REKCURD_SERVICE_BOOT_SHELL":
+        elif env_ent.name == "venus912_SERVICE_BOOT_SHELL":
             deployment_info["service_boot_script"] = env_ent.value
     model_model: ModelModel = db.session.query(ModelModel).filter(
         ModelModel.application_id == application_id, ModelModel.filepath == filepath).first_or_404()
@@ -838,7 +838,7 @@ def switch_model_assignment(project_id: int, application_id: str, service_id: st
     deployment_info["service_model_assignment"] = model_id
     deployment_info["commit_message"] = "model_id={0} on {1:%Y%m%d%H%M%S}".format(model_id, datetime.utcnow())
 
-    apply_rekcurd_to_kubernetes(
+    apply_venus912_to_kubernetes(
         project_id=project_id, application_id=application_id, **deployment_info)
 
     service_model.model_id = model_id
@@ -951,7 +951,7 @@ def backup_istio_routing(kubernetes_model: KubernetesModel, application_model: A
 
 def load_secret(project_id: int, application_id: str, service_level: str, name_prefix: str):
     if len(name_prefix) > 3:
-        raise RekcurdDashboardException("name_prefix must be up to 3 characters.")
+        raise venus912DashboardException("name_prefix must be up to 3 characters.")
     kubernetes_model: KubernetesModel = db.session.query(KubernetesModel).filter(
         KubernetesModel.project_id == project_id).first_or_404()
     full_config_path = get_full_config_path(kubernetes_model.config_path)
@@ -973,7 +973,7 @@ def load_secret(project_id: int, application_id: str, service_level: str, name_p
 
 def apply_secret(project_id: int, application_id: str, service_level: str, string_data: dict, name_prefix: str):
     if len(name_prefix) > 3:
-        raise RekcurdDashboardException("name_prefix must be up to 3 characters.")
+        raise venus912DashboardException("name_prefix must be up to 3 characters.")
     application_model: ApplicationModel = db.session.query(ApplicationModel).filter(
         ApplicationModel.application_id == application_id).first_or_404()
     for kubernetes_model in db.session.query(KubernetesModel).filter(KubernetesModel.project_id == project_id).all():
@@ -988,7 +988,7 @@ def apply_secret(project_id: int, application_id: str, service_level: str, strin
             metadata=client.V1ObjectMeta(
                 name=name,
                 namespace=service_level,
-                labels={"rekcurd-worker": "True", "id": application_model.application_id,
+                labels={"venus912-worker": "True", "id": application_model.application_id,
                         "name": application_model.application_name}
             ),
             string_data=string_data,
@@ -1019,7 +1019,7 @@ def apply_secret(project_id: int, application_id: str, service_level: str, strin
 
 def delete_secret(project_id: int, application_id: str, service_level: str, name_prefix: str):
     if len(name_prefix) > 3:
-        raise RekcurdDashboardException("name_prefix must be up to 3 characters.")
+        raise venus912DashboardException("name_prefix must be up to 3 characters.")
     kubernetes_model: KubernetesModel = db.session.query(KubernetesModel).filter(
         KubernetesModel.project_id == project_id).first_or_404()
     full_config_path = get_full_config_path(kubernetes_model.config_path)

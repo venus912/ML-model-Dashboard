@@ -21,13 +21,13 @@ from kubernetes import config as k8s_config
 
 import yaml
 
-from rekcurd_dashboard.core import create_app, RekcurdDashboardClient
-from rekcurd_dashboard.apis.kubernetes_handler import get_full_config_path
-from rekcurd_dashboard.models import (
+from venus912_dashboard.core import create_app, venus912DashboardClient
+from venus912_dashboard.apis.kubernetes_handler import get_full_config_path
+from venus912_dashboard.models import (
     db, ProjectModel, DataServerModel, DataServerModeEnum, KubernetesModel, ApplicationModel,
     ServiceModel, ModelModel
 )
-from rekcurd_dashboard.logger import JsonSystemLogger
+from venus912_dashboard.logger import JsonSystemLogger
 
 
 def get_minikube_ip(profile):
@@ -48,20 +48,20 @@ worker_container = WorkerConfiguration.deployment['spec']['template']['spec']['c
 worker_env = {env['name']: env['value'] for env in worker_container['env']}
 
 KubeSetting = namedtuple('KubeSetting', 'display_name description config_path ip port exposed_host exposed_port')
-rekcurd_test1_ip = os.getenv('KUBE_IP1', get_minikube_ip('rekcurd-test1')).strip()
-kube_setting1 = KubeSetting(display_name='rekcurd-test-kube-1',
+venus912_test1_ip = os.getenv('KUBE_IP1', get_minikube_ip('venus912-test1')).strip()
+kube_setting1 = KubeSetting(display_name='venus912-test-kube-1',
                             description='Description 1',
                             config_path=os.getenv('KUBE_CONFIG_PATH1', '/tmp/kube-config-path1'),
-                            ip=rekcurd_test1_ip,
+                            ip=venus912_test1_ip,
                             port=31380,
-                            exposed_host=rekcurd_test1_ip,
+                            exposed_host=venus912_test1_ip,
                             exposed_port=31380)
-kube_setting2 = KubeSetting(display_name='rekcurd-test-kube-2',
+kube_setting2 = KubeSetting(display_name='venus912-test-kube-2',
                             description='Description 2',
                             config_path=os.getenv('KUBE_CONFIG_PATH1', '/tmp/kube-config-path1'),
-                            ip=rekcurd_test1_ip,
+                            ip=venus912_test1_ip,
                             port=31380,
-                            exposed_host=rekcurd_test1_ip,
+                            exposed_host=venus912_test1_ip,
                             exposed_port=31381)
 
 POSITIVE_MODEL_PATH = pathlib.Path(__file__).parent.joinpath('test-models').joinpath('positive.pkl')
@@ -148,14 +148,14 @@ class BaseTestCase(TestCase):
 
     def wait_worker_ready(self, insecure_host: str = None, insecure_port: int = None,
                           application_name: str = None, service_level: str = None,
-                          rekcurd_grpc_version: str = None):
+                          venus912_grpc_version: str = None):
         # Waiting for model becoming ready
         # Set a timeout in case the service fails to run
         timeout = int(self.START_TIMEOUT)
-        logger = JsonSystemLogger('Rekcurd dashboard test', log_level=logging.CRITICAL)
-        dashboard_client = RekcurdDashboardClient(
+        logger = JsonSystemLogger('venus912 dashboard test', log_level=logging.CRITICAL)
+        dashboard_client = venus912DashboardClient(
             host=insecure_host, port=insecure_port, application_name=application_name,
-            service_level=service_level, rekcurd_grpc_version=rekcurd_grpc_version)
+            service_level=service_level, venus912_grpc_version=venus912_grpc_version)
         dashboard_client.logger = logger
         while timeout > 0:
             try:

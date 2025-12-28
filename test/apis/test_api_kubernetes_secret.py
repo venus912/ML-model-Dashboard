@@ -3,7 +3,7 @@ from unittest.mock import patch, Mock, mock_open
 
 from werkzeug.exceptions import NotFound
 
-from rekcurd_dashboard.apis import GIT_ID_RSA, GIT_CONFIG
+from venus912_dashboard.apis import GIT_ID_RSA, GIT_CONFIG
 
 from test.base import BaseTestCase, TEST_PROJECT_ID, TEST_APPLICATION_ID
 
@@ -19,11 +19,11 @@ def mock_decorator():
         @wraps(func)
         def inner_method(*args, **kwargs):
             with patch('builtins.open', new_callable=mock_open) as _, \
-                    patch('rekcurd_dashboard.apis.api_kubernetes_secret.apply_secret',
+                    patch('venus912_dashboard.apis.api_kubernetes_secret.apply_secret',
                           new=Mock(return_value=True)) as _, \
-                    patch('rekcurd_dashboard.apis.api_kubernetes_secret.delete_secret',
+                    patch('venus912_dashboard.apis.api_kubernetes_secret.delete_secret',
                           new=Mock(return_value=True)) as _, \
-                    patch('rekcurd_dashboard.apis.api_kubernetes_secret.load_secret',
+                    patch('venus912_dashboard.apis.api_kubernetes_secret.load_secret',
                           new=Mock(return_value=True)) as string_data:
                 string_data.return_value = {}
                 return func(*args, **kwargs)
@@ -50,7 +50,7 @@ class ApiGitKeyTest(BaseTestCase):
             data={'service_level': service_level, GIT_ID_RSA: git_id_rsa, GIT_CONFIG: git_config})
         self.assertEqual(200, response.status_code)
 
-    @patch('rekcurd_dashboard.apis.api_kubernetes_secret.load_secret')
+    @patch('venus912_dashboard.apis.api_kubernetes_secret.load_secret')
     def test_post_not_found(self, mock_load_secret):
         mock_load_secret.side_effect = NotFound()
         service_level = SERVICE_LEVEL

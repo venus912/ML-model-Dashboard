@@ -110,7 +110,7 @@ ENV/
 kube-config/
 
 # frontend
-rekcurd_dashboard/static/
+venus912_dashboard/static/
 
 # test
 test-kube-config/

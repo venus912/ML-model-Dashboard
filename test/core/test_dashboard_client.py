@@ -5,22 +5,22 @@ import grpc
 from grpc.framework.foundation import logging_pool
 import grpc_testing
 
-from rekcurd_dashboard.protobuf import rekcurd_pb2
+from venus912_dashboard.protobuf import venus912_pb2
 from test.core import _client_application
 
-target_service = rekcurd_pb2.DESCRIPTOR.services_by_name['RekcurdDashboard']
+target_service = venus912_pb2.DESCRIPTOR.services_by_name['venus912Dashboard']
 
 
-class RekcurdDashboardClientTest(unittest.TestCase):
+class venus912DashboardClientTest(unittest.TestCase):
 
     def setUp(self):
         self._client_execution_thread_pool = logging_pool.pool(1)
         self._fake_time = grpc_testing.strict_fake_time(time.time())
         self._real_time = grpc_testing.strict_real_time()
         self._fake_time_channel = grpc_testing.channel(
-            rekcurd_pb2.DESCRIPTOR.services_by_name.values(), self._fake_time)
+            venus912_pb2.DESCRIPTOR.services_by_name.values(), self._fake_time)
         self._real_time_channel = grpc_testing.channel(
-            rekcurd_pb2.DESCRIPTOR.services_by_name.values(), self._real_time)
+            venus912_pb2.DESCRIPTOR.services_by_name.values(), self._real_time)
 
     def tearDown(self):
         self._client_execution_thread_pool.shutdown(wait=True)
@@ -37,8 +37,8 @@ class RekcurdDashboardClientTest(unittest.TestCase):
                       grpc.StatusCode.OK, '')
         application_return_value = application_future.result()
 
-        self.assertEqual(invocation_metadata[0], ('x-rekcurd-application-name', 'rekcurd-sample'))
-        self.assertEqual(invocation_metadata[1], ('x-rekcurd-sevice-level', 'development'))
+        self.assertEqual(invocation_metadata[0], ('x-venus912-application-name', 'venus912-sample'))
+        self.assertEqual(invocation_metadata[1], ('x-venus912-sevice-level', 'development'))
 
     def test_service_info(self):
         application_future = self._client_execution_thread_pool.submit(

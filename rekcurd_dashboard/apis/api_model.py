@@ -6,10 +6,10 @@ from flask_restplus import Namespace, fields, Resource, reqparse
 from werkzeug.datastructures import FileStorage
 
 from . import DatetimeToTimestamp, status_model
-from rekcurd_dashboard.core import RekcurdDashboardClient
-from rekcurd_dashboard.data_servers import DataServer
-from rekcurd_dashboard.models import db, DataServerModel, DataServerModeEnum, ApplicationModel, ServiceModel, ModelModel
-from rekcurd_dashboard.utils import RekcurdDashboardException
+from venus912_dashboard.core import venus912DashboardClient
+from venus912_dashboard.data_servers import DataServer
+from venus912_dashboard.models import db, DataServerModel, DataServerModeEnum, ApplicationModel, ServiceModel, ModelModel
+from venus912_dashboard.utils import venus912DashboardException
 
 
 model_api_namespace = Namespace('models', description='Model API Endpoint.')
@@ -70,13 +70,13 @@ class ApiModels(Resource):
             service_models = db.session.query(
                 ServiceModel).filter(ServiceModel.application_id == application_id).all()
             for service_model in service_models:
-                rekcurd_dashboard_application = RekcurdDashboardClient(
+                venus912_dashboard_application = venus912DashboardClient(
                     host=service_model.insecure_host, port=service_model.insecure_port,
                     application_name=application_model.application_name,
-                    service_level=service_model.service_level, rekcurd_grpc_version=service_model.version)
-                response_body = rekcurd_dashboard_application.run_upload_model(filepath, file)
+                    service_level=service_model.service_level, venus912_grpc_version=service_model.version)
+                response_body = venus912_dashboard_application.run_upload_model(filepath, file)
                 if not response_body.get("status", True):
-                    raise RekcurdDashboardException(response_body.get("message", "Error."))
+                    raise venus912DashboardException(response_body.get("message", "Error."))
             response_body = {"status": True, "message": "Success."}
         else:
             """Otherwise, upload file."""
@@ -121,10 +121,10 @@ class ApiModelId(Resource):
         """delete_model"""
         model_model = db.session.query(ModelModel).filter(ModelModel.model_id==model_id).one_or_none()
         if model_model is None:
-            raise RekcurdDashboardException("No such model_id.")
+            raise venus912DashboardException("No such model_id.")
         num = db.session.query(ServiceModel).filter(ServiceModel.model_id==model_id).count()
         if num > 0:
-            raise RekcurdDashboardException("Model is used by some services.")
+            raise venus912DashboardException("Model is used by some services.")
         # TODO: Delete file.
         db.session.query(ModelModel).filter(ModelModel.model_id==model_id).delete()
         db.session.commit()

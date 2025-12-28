@@ -1,4 +1,4 @@
-from rekcurd_dashboard.models import db, ApplicationModel
+from venus912_dashboard.models import db, ApplicationModel
 
 from test.base import BaseTestCase, TEST_PROJECT_ID, TEST_APPLICATION_ID
 

@@ -1,7 +1,7 @@
 from functools import wraps
 from unittest.mock import patch, Mock, mock_open
 
-from rekcurd_dashboard.models import db, ServiceModel
+from venus912_dashboard.models import db, ServiceModel
 
 from test.base import BaseTestCase, TEST_PROJECT_ID, TEST_APPLICATION_ID, TEST_SERVICE_ID
 
@@ -14,17 +14,17 @@ def mock_decorator():
         @wraps(func)
         def inner_method(*args, **kwargs):
             with patch('builtins.open', new_callable=mock_open) as _, \
-                    patch('rekcurd_dashboard.apis.api_service_deployment.apply_rekcurd_to_kubernetes',
+                    patch('venus912_dashboard.apis.api_service_deployment.apply_venus912_to_kubernetes',
                           new=Mock(return_value=True)) as _, \
-                    patch('rekcurd_dashboard.apis.api_service_deployment.load_kubernetes_deployment_info',
+                    patch('venus912_dashboard.apis.api_service_deployment.load_kubernetes_deployment_info',
                           new=Mock(return_value=True)) as deployment_info, \
-                    patch('rekcurd_dashboard.apis.api_service_deployment.RekcurdDashboardClient',
-                          new=Mock(return_value=Mock())) as rekcurd_dashboard_application:
+                    patch('venus912_dashboard.apis.api_service_deployment.venus912DashboardClient',
+                          new=Mock(return_value=Mock())) as venus912_dashboard_application:
                 deployment_info.return_value = {'version': 'vn', 'service_model_assignment': 1,
                                                 'insecure_host': 'new_host',
                                                 'insecure_port': 18080}
-                rekcurd_dashboard_application.return_value.run_service_info = Mock()
-                rekcurd_dashboard_application.return_value.run_service_info.return_value = \
+                venus912_dashboard_application.return_value.run_service_info = Mock()
+                venus912_dashboard_application.return_value.run_service_info.return_value = \
                     {"service_name": "nonkube-service"}  # TODO: renaming
                 return func(*args, **kwargs)
         return inner_method

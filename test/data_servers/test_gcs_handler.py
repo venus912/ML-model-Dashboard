@@ -1,7 +1,7 @@
 import unittest
 
-from rekcurd_dashboard.models import DataServerModel, DataServerModeEnum
-from rekcurd_dashboard.data_servers import GcsHandler
+from venus912_dashboard.models import DataServerModel, DataServerModeEnum
+from venus912_dashboard.data_servers import GcsHandler
 
 from . import patch_predictor
 
